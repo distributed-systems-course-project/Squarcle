@@ -57,8 +57,6 @@ class Com_Init:
 		#else => couldn't get node IP address => This node can't play the game !
 
 
-
-
 	'''
 	Function used to generate node number
 	Input:
