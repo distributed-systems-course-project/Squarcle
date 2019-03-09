@@ -11,7 +11,8 @@ import secrets		#  for generating cryptographically strong random numbers
 	It implements 4 getters:
 		- get_node_nbr: returns node generated number to be used as an identifier !
 		- get_node_ip: node IP address
-		- get_node_tcp_port: TCP/IP port number 
+		- get_node_tcp_port: TCP/IP port number
+		- get_node_subnet_ip: return node subnet it (192.168.1) 
 		- get_can_play : If true => all set, node can play; If false: node can't play the game
 '''
 class Com_Init:
@@ -20,8 +21,10 @@ class Com_Init:
 	node_nbr = 0;
 	node_ip = "";
 	node_tcp_port = 0;
+	node_subnet_ip = 0;
 
 
+	# Constructor
 	def __init__(self):
 		'''
 		In the following section we will get the IP address of the wireless device of the node
@@ -39,9 +42,10 @@ class Com_Init:
 			self.can_play = True
 		else: # No wireless device with 'w' in its name
 			self.can_play = False
-
+		
 		if self.can_play:
-			self.node_nbr = self.geenrate_node_nbr(self.node_ip)
+			self.node_nbr = self.genrate_node_nbr(self.node_ip)
+			self.node_subnet_ip = self.generate_node_subnet_ip(self.node_ip)
 
 			# Checking the availability of the port
 			node_tcp_port = 5000
@@ -53,8 +57,6 @@ class Com_Init:
 		#else => couldn't get node IP address => This node can't play the game !
 
 
-
-
 	'''
 	Function used to generate node number
 	Input:
@@ -62,12 +64,31 @@ class Com_Init:
 	Return:
 		node_nbr : integer => node number
 	'''
-	def geenrate_node_nbr(self, node_ip):
+	def genrate_node_nbr(self, node_ip):
 		
 		node_nbr = node_ip.split('.')[-1]
 
 		return node_nbr
 
+	'''
+	Function to extract node subnet ip address to be used later
+	Input:
+		node_ip: string => node ip address
+	Return:
+		node_subnet_ip : string => node subnet ip address
+	
+	'''
+	def generate_node_subnet_ip(self, node_ip):
+		
+		node_subnet_ip = "."
+		
+		separated = node_ip.split('.')
+		
+		del separated[-1] 
+
+		node_subnet_ip = node_subnet_ip.join(separated)
+	
+		return node_subnet_ip
 		
 	'''
 	Function used to check port availability
@@ -99,6 +120,9 @@ class Com_Init:
 
 	def get_node_tcp_port(self):
 		return self.node_tcp_port
+
+	def get_node_subnet_ip(self):
+		return self.node_subnet_ip
 
 	def get_can_play(self):
 		return self.can_play
