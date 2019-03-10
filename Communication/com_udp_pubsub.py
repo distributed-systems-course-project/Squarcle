@@ -2,24 +2,26 @@
 import socket
 
 class udp_pubsub:
-	udp_receiving_ports = [] # To listen to
-	udp_sending_ports   = [] # To send to
+	participants		= {}
 	udp_ips 	        = []
 	udp_node_nbrs       = []
 	other_nodes_msgs    = []
 	udp_subnet          = ""
 	sock                = ''
 
-	def __init__(self):
-		pass
 
-	def __init__(self, udp_subnet, udp_node_nbrs, udp_receiving_ports, udp_sending_ports):
+	'''
+	Constructor
+	Takes a string that contains master node subnet network
+	and dictionary of participants (created at tcp_listener class) 
+	Dictionary: {'participant_id': [listening_at, publishing_at]} udp ports
+	It generates neighboting nodes ips too
+	'''
+
+	def __init__(self, udp_subnet, participants):
 		self.udp_subnet          = udp_subnet
-		self.udp_node_nbrs       = udp_node_nbrs
-		self.udp_receiving_ports = udp_receiving_ports
-		self.udp_sending_ports   = udp_sending_ports
-
-		self.neighboring_nodes_ips(udp_subnet, udp_node_nbrs)
+		self.participants		 = participants
+		self.neighboring_nodes_ips(udp_subnet, participants)
 
 
 	'''
@@ -27,9 +29,9 @@ class udp_pubsub:
 	IP addresses of other discovered nodes.
 	The results are stores in the global variable udp_ips
 	'''
-	def neighboring_nodes_ips(self, udp_subnet, udp_node_nbrs):
-		for node_nbr in udp_node_nbrs:
-			udp_ips.append( udp_subnet.append( '.'+ str(node_nbr) ) )
+	def neighboring_nodes_ips(self, udp_subnet, participants):
+		for node_id, udp_ports in participants.items():
+			udp_ports.append( udp_subnet + '.' +  node_id )
 
 
 	'''
@@ -58,9 +60,9 @@ class udp_pubsub:
 
 			i = 0
 			for i in range(len(self.udp_ips)):
-			    data, addr = self.sock.recvfrom(1024) # buffer size is 1024 bytes
-			    print("received message:", data.decode('ascii'))
-			    # Update the other_nodes_msgs
+				data, addr = self.sock.recvfrom(1024) # buffer size is 1024 bytes
+				print("received message:", data.decode('ascii'))
+				# Update the other_nodes_msgs
 				self.other_nodes_msgs.append( self.message_reformulation(data.decode('ascii')) )
 
 		sock.close()
@@ -83,6 +85,8 @@ class udp_pubsub:
 		return result
 
 
+
+
 	'''
 	Getters
 	'''
@@ -90,5 +94,6 @@ class udp_pubsub:
 	def get_other_nodes_msgs(self):
 		return self.other_nodes_msgs
 
-
+	def get_participants_ips(self):
+		return self.participants
 

@@ -17,6 +17,9 @@ import secrets		#  for generating cryptographically strong random numbers
 '''
 class Com_Init:
 
+	# This port nbr was chosen from https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers#Table_legend
+	INITIAL_TCP_PORT = 25000 # Assuming port 25,000 is not used by any other process
+
 	can_play = False;
 	node_nbr = 0;
 	node_ip = "";
@@ -48,11 +51,8 @@ class Com_Init:
 			self.node_subnet_ip = self.generate_node_subnet_ip(self.node_ip)
 
 			# Checking the availability of the port
-			node_tcp_port = 5000
-			while(not self.checkPort(node_tcp_port)):
-				node_tcp_port+=1
-
-			self.node_tcp_port = node_tcp_port
+			
+			self.node_tcp_port = self.INITIAL_TCP_PORT
 		
 		#else => couldn't get node IP address => This node can't play the game !
 
@@ -90,24 +90,6 @@ class Com_Init:
 	
 		return node_subnet_ip
 		
-	'''
-	Function used to check port availability
-	Input:
-		port: integer => port number to check
-	Return:
-		result: boolean => True if port is not in use; false otherwise
-	'''
-	def checkPort(self, port):
-	    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	    result = False
-	    try:
-	        sock.bind(("0.0.0.0", port))
-	        result = True
-	    except:
-	        result = False
-	    sock.close()
-	    return result
-
 
 	'''
 	Getters section

@@ -12,8 +12,6 @@ tcp_listener_obj = com_tcp_listener.Tcp_Listener(com_init_obj.get_node_ip(),
 												com_init_obj.get_node_tcp_port(),
 												com_init_obj.get_node_nbr())
 
-# Empty initialization of udp_pubsub object
-#udp_pubsub = com_udp_pubsub.udp_pubsub()
 
 # Check if user has a wireless card connected !
 if com_init_obj.get_can_play:
@@ -46,12 +44,20 @@ if com_init_obj.get_can_play:
 				isAllPlayersIn = True
 				tcp_listener_obj.close_tcp_listener() # close listener if still open
 
+		for player, udp_ports in tcp_listener_obj.get_participants().items():
+			print('Player: {}, listening at {}, publishing at {}'.format(player, udp_ports[0], udp_ports[1]))
 
+
+		#Initialization of udp_pubsub object
+		udp_pubsub = com_udp_pubsub.udp_pubsub(com_init_obj.get_node_subnet_ip(), tcp_listener_obj.get_participants())
+		print('From udp_pubsub')
+		print(udp_pubsub.get_participants_ips())
 
 
 	else:
 		# implement an ID verification !
 		join_id = int(input("Enter your friend's ID: "))
+
 
 
 
