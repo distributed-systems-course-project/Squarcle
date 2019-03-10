@@ -22,8 +22,6 @@ import time
 import random
 import threading
 
-
-
 class squarcle_data:
     #################################these are constants that would be used###################################################
     ##GUI designer needs to adjust these parameters based on the view and size of display used
@@ -55,17 +53,26 @@ class squarcle_data:
 
 
 
-    def __init__(self, name, number_of_nodes, node_ID):
+    def __init__(self):
+        self.lock = threading.Lock()
+    def release(self):
+        self.lock.release()
+        self.set_timer()
+
+    def acquire(self):
+        self.lock.acquire()
+
+    def set_parameters(self, number_of_nodes, node_ID):
         self.number_of_nodes = number_of_nodes
-        self.name = name
         self.node_ID = node_ID
         self.all_scores = [0] * number_of_nodes
-        self.lock = threading.Lock()
 
     def set_number_of_nodes(self, number_of_nodes):
         self.number_of_nodes = number_of_nodes
         ##once called, create sequances
 
+    def set_name(self, name):
+        self.name = name
 
     def set_nodes_centers(self, nodes_centers):
         self.nodes_centers = nodes_centers
