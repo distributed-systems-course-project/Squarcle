@@ -54,7 +54,7 @@ class udp_pubsub:
 		for node_id in self.participants:
 			IP   = self.participants[node_id][2]
 			PORT = self.participants[node_id][0]
-			sock.sendto(MESSAGE, (IP, PORT))
+			self.sock.sendto(MESSAGE, (IP, PORT))
 
 		self.sock.close()
 
@@ -66,7 +66,7 @@ class udp_pubsub:
 	"node_id.center_x.center_y.score"
 	'''
 
-	def message_formulation(self, centers_score)
+	def message_formulation(self, centers_score):
 		return '.'.join(list(map(str, centers_score)))
 
 
