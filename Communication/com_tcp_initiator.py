@@ -1,11 +1,11 @@
 # Communication TCP listener class
 import socket 		# To manage sockets
 
-class Tcp_Listener:
+class Tcp_Initiator:
 
 	tcp_ip = 0
 	tcp_port = 0
-	participants = []		# Dictionary: {'participant_id': [listening_at, publishing_at]} udp ports
+	participants = {}		# Dictionary: {'participant_id': [listening_at, publishing_at]} udp ports
 	BUFFER_SIZE = 1024
 	sock = '' # Socket
 	node_id = 0
@@ -31,33 +31,38 @@ class Tcp_Listener:
 	'''
 	def tcp_listen(self):
 		data = ""
-		udp_port = self.tcp_port + 1
+		if not self.participants:  # No participants yet !
+			udp_port = self.tcp_port + 1
+		else: 				 # There are other participants
+			# The list bellow takes the last participant's udp port nbr and adds 1 to it to initialize udp_port
+			udp_port = self.participants[ list( self.participants.keys())[-1] ][-1] + 1
 		
 		self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		
-		self.sock.bind((self.tcp_ip, self.tcp_port))
+		try:
+			self.sock.bind((self.tcp_ip, self.tcp_port))
 
-		self.sock.listen(1)
+			self.sock.listen(1)
 
-		conn, addr = self.sock.accept()
-		while 1:
-			tmp = conn.recv(self.BUFFER_SIZE)
-			if not tmp: break
-			data = str(tmp.decode('ascii')) # dara is the neighbor node ID
-			
-			# Generate 2 free udp port nbr
-			self.participants[data] = []
-			for i in range(2):
-				while(not self.checkPort(udp_port)):
+			conn, addr = self.sock.accept()
+			while 1:
+				tmp = conn.recv(self.BUFFER_SIZE)
+				if not tmp: break
+				data = str(tmp.decode('ascii')) # data is the neighbor node ID
+				
+				# Generate 2 free udp port nbr
+				self.participants[data] = []
+				for i in range(2):
+					while(not self.checkPort(udp_port)):
+						udp_port+=1
+					self.participants[data].append(udp_port)
 					udp_port+=1
-				self.participants[data].append(udp_port)
-				udp_port+=1
 
-			to_send = self.tcp_echo_msg(data) # to send should contain [<node_id>, <udp_listening_port>, <udp_publiishing_port> ]
+				to_send = self.tcp_echo_msg(data) # to send should contain [<node_id>, <udp_listening_port>, <udp_publiishing_port> ]
 
-			conn.send(to_send.encode('utf-8'))  # echo
-		self.sock.close()
-		return data
+				conn.send(to_send.encode('utf-8'))  # echo
+		finally:
+			self.sock.close()
 
 
 	'''
@@ -91,7 +96,37 @@ class Tcp_Listener:
 	Used when user needs to join a game !
 	'''
 	def tcp_joiner(self, neighbor_node_nbr, node_subnet):
-		pass
+		neighbor_ip = node_subnet + '.' + str(neighbor_node_nbr)
+
+		self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		
+		self.sock.connect((neighbor_ip, self.tcp_port))
+
+		try:
+			self.sock.sendall(str(self.node_id).encode('utf-8'))
+
+			while True:
+				data = self.sock.recv(self.BUFFER_SIZE) # node_id.udp_l_port.udp_p_port
+				if data: break
+
+			self.participants = self.extract_master_msg(data)
+
+
+		finally:
+			self.sock.close()
+
+
+	'''
+	extract_master_msg encapsulate the message received from the 
+	'''
+	def extract_master_msg(self, data):
+		data = data.decode('ascii')
+
+		participant = data.split('.')
+		
+		participant = { str(participant[0]) : list(map(int, participant[1:])) }
+		
+		return participant
 
 	'''
 	Needed to close connection socket if something unexpeceted happened

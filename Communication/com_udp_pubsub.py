@@ -5,7 +5,6 @@ class udp_pubsub:
 
 	udp_subnet          = ""
 	participants		= {}
-	udp_ips 	        = []
 	other_nodes_msgs    = {}
 	sock                = ''
 
@@ -29,7 +28,7 @@ class udp_pubsub:
 	'''
 	neighboring nodes ips function uses provided subnet to formulate
 	IP addresses of other discovered nodes.
-	The results are stores in the global variable udp_ips
+	The results are stores in the global variable participants
 	'''
 	def neighboring_nodes_ips(self, udp_subnet, participants):
 		for node_id, udp_ports in participants.items():
@@ -50,13 +49,13 @@ class udp_pubsub:
 
 		self.sock = socket.socket(socket.AF_INET, # Internet
 		                     socket.SOCK_DGRAM) # UDP
-
-		for node_id in self.participants:
-			IP   = self.participants[node_id][2]
-			PORT = self.participants[node_id][0]
-			self.sock.sendto(MESSAGE, (IP, PORT))
-
-		self.sock.close()
+		try:
+			for node_id in self.participants:
+				IP   = self.participants[node_id][2]
+				PORT = self.participants[node_id][0]
+				self.sock.sendto(MESSAGE, (IP, PORT))
+		finally:
+			self.sock.close()
 
 
 	'''
@@ -85,22 +84,24 @@ class udp_pubsub:
 		self.sock = socket.socket(socket.AF_INET, # Internet
 		                     socket.SOCK_DGRAM) # UDP
 
-		for node_id in self.participants:
-			IP   = self.participants[node_id][2] # IP of neighbor
-			PORT = self.participants[node_id][1] # Neighbor's publishing port (we listener to the publishing port of the neighbor)
-			
-			self.sock.bind((IP, PORT))
+		try:
 
-			data, addr = self.sock.recvfrom(1024) # buffer size is 1024 bytes
-			
-			print("received message:", data.decode('ascii'))
-			# Update the other_nodes_msgs
-			msg = self.message_reformulation(data.decode('ascii'))
-			
-			if int(msg[0]) == int(node_id):
-				self.other_nodes_msgs[node_id] = msg[1:]
+			for node_id in self.participants:
+				IP   = self.participants[node_id][2] # IP of neighbor
+				PORT = self.participants[node_id][1] # Neighbor's publishing port (we listener to the publishing port of the neighbor)
+				
+				self.sock.bind((IP, PORT))
 
-		self.sock.close()
+				data, addr = self.sock.recvfrom(1024) # buffer size is 1024 bytes
+				
+				print("received message:", data.decode('ascii'))
+				# Update the other_nodes_msgs
+				msg = self.message_reformulation(data.decode('ascii'))
+				
+				if int(msg[0]) == int(node_id):
+					self.other_nodes_msgs[node_id] = msg[1:]
+		finally:
+			self.sock.close()
 
 
 	'''
