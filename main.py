@@ -12,8 +12,8 @@ data.set_parameters(5, 1)
 
 ##GUI continues
 #first thing, set name once u get it from user
-data.lock.acquire()
+data.acquire()
 data.set_name("myName")
-data.lock.release()
+data.release()
 
 
