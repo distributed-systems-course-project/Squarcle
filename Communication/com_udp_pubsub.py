@@ -38,19 +38,36 @@ class udp_pubsub:
 
 	'''
 	Publishes current node information and states to other neighboring nodes ! 
-	Message should have the form {<node_id>: [<center_y_coor>, <center_y_coor>, <score>]}
+	centers_score is a list of integers of the form [<center_x>, <center_y>, <score>]
+	The message will be published to all neighboring nodes at their listening ports
+	the published message form is described in message_formulation function 
 
 	'''
-	def udp_publisher(self, MESSAGE):
+	def udp_publisher(self, centers_score):
+		MESSAGE = self.message_formulation(centers_score) # Formulating the write msg to send
+
 		MESSAGE = MESSAGE.encode('utf-8') # encoding the message before sending it
 
-		sock = socket.socket(socket.AF_INET, # Internet
+		self.sock = socket.socket(socket.AF_INET, # Internet
 		                     socket.SOCK_DGRAM) # UDP
 
 		for node_id in self.participants:
 			IP   = self.participants[node_id][2]
 			PORT = self.participants[node_id][0]
 			sock.sendto(MESSAGE, (IP, PORT))
+
+		self.sock.close()
+
+
+	'''
+	message_formulation function takes a list of ints of the form [<center_x>, <center_y>, <score>]
+	and transform it to a string ready to be sent !
+	The string has the form:
+	"node_id.center_x.center_y.score"
+	'''
+
+	def message_formulation(self, centers_score)
+		return '.'.join(list(map(str, centers_score)))
 
 
 	'''
@@ -81,7 +98,6 @@ class udp_pubsub:
 			msg = self.message_reformulation(data.decode('ascii'))
 			
 			if int(msg[0]) == int(node_id):
-				print('passed !')
 				self.other_nodes_msgs[node_id] = msg[1:]
 
 		self.sock.close()
