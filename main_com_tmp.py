@@ -52,6 +52,10 @@ if com_init_obj.get_can_play:
 		udp_pubsub = com_udp_pubsub.udp_pubsub(com_init_obj.get_node_subnet_ip(), tcp_listener_obj.get_participants())
 		print('From udp_pubsub')
 		print(udp_pubsub.get_participants_ips())
+		
+		udp_pubsub.udp_subscriber()
+		print('Neighbor said :')
+		print(udp_pubsub.get_other_nodes_msgs())
 
 
 	else:
