@@ -35,8 +35,9 @@ else:
 
 ##once launched, and number of nodes is known in the communication thread, call set_parameters
 ##Also you need to decide a unique ID for each node, this could be ordering by connection time, like 0, 1, 2 depending on connecting rank
-data.set_parameters(5, 1)
+data.set_parameters(4, 1)
 
+<<<<<<< HEAD
 
 
 ##GUI continues
@@ -46,4 +47,8 @@ data.acquire()
 data.set_name("myName")
 data.release()
 '''
+=======
+print(data.corners)
+
+>>>>>>> c1ceea800f235825fb9a30bc36bf79d909563f1a
 
