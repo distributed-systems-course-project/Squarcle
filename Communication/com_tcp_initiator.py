@@ -9,13 +9,15 @@ class Tcp_Initiator:
 	BUFFER_SIZE = 1024
 	sock = '' # Socket
 	node_id = 0
+	data = '' # Squarecle data object
 
-	def __init__(self, tcp_ip, tcp_port, node_id):
+	def __init__(self, tcp_ip, tcp_port, node_id, data):
 		self.tcp_ip = tcp_ip
 		self.tcp_port = tcp_port
 		self.node_id = node_id
 		self.BUFFER_SIZE = 1024
 		self.participants = dict()
+		self.data = data
 
 
 	'''
@@ -31,6 +33,11 @@ class Tcp_Initiator:
 	'''
 	def tcp_listen(self):
 		data = ""
+		
+		self.data.acquire()
+		node_name = self.data.name
+		self.data.release()
+
 		if not self.participants:  # No participants yet !
 			udp_port = self.tcp_port + 1
 		else: 				 # There are other participants
@@ -50,20 +57,32 @@ class Tcp_Initiator:
 				if not tmp: break
 				data = str(tmp.decode('ascii')) # data is the neighbor node ID
 				
+				data = self.first_msg_interpreter(data) # return a list [node_name, node_id]
+				
 				# Generate 2 free udp port nbr
-				self.participants[data] = []
+				self.participants[data[1]] = [] # Keys of the dictionary are the IDs!
+				self.participants[data[1]].append(int(data[0])) # name of the node
+
 				for i in range(2):
 					while(not self.checkPort(udp_port)):
 						udp_port+=1
-					self.participants[data].append(udp_port)
+					self.participants[data[1]].append(udp_port)
 					udp_port+=1
 
-				to_send = self.tcp_echo_msg(data) # to send should contain [<node_id>, <udp_listening_port>, <udp_publiishing_port> ]
+				to_send = self.tcp_echo_msg(node_name, data[1]) # to send should contain [<node_id>, <node_name>, <udp_listening_port>, <udp_publiishing_port> ]
 
 				conn.send(to_send.encode('utf-8'))  # echo
 		finally:
 			self.sock.close()
 
+
+	'''
+	first_msg_interpreter take the first received tcp msg
+	if should have the form name.node_id 
+	Retruns: a list of strings of the form: [<node_name>, <node ID>]
+	'''
+	def first_msg_interpreter(self, data):
+		return data.split('.')
 
 	'''
 	Function used to check port availability
@@ -87,9 +106,9 @@ class Tcp_Initiator:
 	Function to generate TCP/IP communication playback message
 	returns a string
 	'''
-	def tcp_echo_msg(self, neighbor_id):
-		msg_struct = [str(self.node_id), str(self.participants[neighbor_id][0]), str(self.participants[neighbor_id][1])]
-
+	def tcp_echo_msg(self, current_node_name,neighbor_id):
+		msg_struct = [str(current_node_name), str(self.node_id), str(self.participants[neighbor_id][1]), str(self.participants[neighbor_id][2])]
+		print(msg_struct)
 		return '.'.join(msg_struct)
 
 	'''
@@ -98,20 +117,25 @@ class Tcp_Initiator:
 	def tcp_joiner(self, neighbor_node_nbr, node_subnet):
 		neighbor_ip = node_subnet + '.' + str(neighbor_node_nbr)
 
+		self.data.acquire()
+		node_name = self.data.name
+		self.data.release()
+
 		self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		
 		self.sock.connect((neighbor_ip, self.tcp_port))
 
+		to_send = node_name + '.' + str(self.node_id)		# Initial joining TCP msg has the form node_name.node_id
+
 		try:
-			self.sock.sendall(str(self.node_id).encode('utf-8'))
+			self.sock.sendall(to_send.encode('utf-8'))
 
 			while True:
-				data = self.sock.recv(self.BUFFER_SIZE) # node_id.udp_l_port.udp_p_port
+				data = self.sock.recv(self.BUFFER_SIZE) # node_id.node_name.udp_l_port.udp_p_port
 				if data: break
 
-			self.participants = self.extract_master_msg(data)
-
-
+			self.participants = self.extract_master_msg(data)	# master is stored here
+			print(self.participants)
 		finally:
 			self.sock.close()
 
@@ -121,12 +145,24 @@ class Tcp_Initiator:
 	'''
 	def extract_master_msg(self, data):
 		data = data.decode('ascii')
+		
+		participant = data.split('.') # [node_id, node_name, l_port, pub_port]
 
-		participant = data.split('.')
-		
-		participant = { str(participant[0]) : list(map(int, participant[1:])) }
-		
+		udp_ports = list(map(int, participant[2:]))
+
+		udp_ports.insert(0, participant[0])
+
+		participant = { str(participant[1]) :  udp_ports } # participant = {'node_ID': [<node_name>, <udp_L_port>, <udp_P_port>]}
+		print('From extracting master msg')
+		print(participant)
 		return participant
+
+	
+	'''
+	Start the game
+	'''
+	
+
 
 	'''
 	Needed to close connection socket if something unexpeceted happened

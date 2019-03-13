@@ -35,6 +35,7 @@ class squarcle_data:
     nodes_centers = [["name", [0,0]]] #this should have information about node ID and center, ['A', (32,4)]
     all_scores = [["name", 0]] #this has the scores of all nodes
     all_scores_ready = False
+    playability = False
     corners = [] #this has the centers of corners, once GUI makes polygon assign centers to this list
     lock = 0 #this is a lock for the shared data, use it between all threads for synchronization
     ##################################these are specific for one node##########################################################
@@ -55,9 +56,11 @@ class squarcle_data:
 
     def __init__(self):
         self.lock = threading.Lock()
+    
+
     def release(self):
         self.lock.release()
-        self.set_timer()
+        #self.set_timer()
 
     def acquire(self):
         self.lock.acquire()
@@ -75,11 +78,17 @@ class squarcle_data:
     def set_name(self, name):
         self.name = name
 
+    def set_node_ID(self, node_ID):
+        self.node_ID = node_ID
+
     def set_nodes_centers(self, nodes_centers):
         self.nodes_centers = nodes_centers
         self.check_distance_with_nodes()
         self.check_distance_with_corners()
         ##once called, invoke game logic to compare distances
+
+    def set_playability(self, playability):
+        self.playability = playability
 
     def set_all_scores(self, all_scores):
         self.all_scores = all_scores
@@ -99,7 +108,10 @@ class squarcle_data:
             self.lost = True
             self.score = 0
     def set_score(self):
-        self.score = self.sequence[0] * 10 + int(100/self.timer[1]) ## I am using just this simple formula for score, think of something better
+        if self.timer[1] != 0:
+            self.score = self.sequence[0] * 10 + int(100/self.timer[1]) ## I am using just this simple formula for score, think of something better
+        else:
+            self.score = 0
         self.all_scores[self.node_ID] = self.score
     def set_node_center(self, node_center):
         self.node_center = node_center

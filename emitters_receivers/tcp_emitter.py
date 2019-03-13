@@ -2,7 +2,7 @@
 import socket
 
 
-TCP_IP = '192.168.1.104'		# Put here Pi's IP address
+TCP_IP = '192.168.1.108'		# Put here Pi's IP address
 TCP_PORT = 25000					# Put here Master-to-Slave
 BUFFER_SIZE = 1024
 #MESSAGE = "image"				# Choose one of these messages
@@ -10,7 +10,7 @@ BUFFER_SIZE = 1024
 #MESSAGE = "pieces"
 #MESSAGE = "piece"
 #MESSAGE = "arm"
-MESSAGE = '104'
+MESSAGE = '108.mokhtar'
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
 	s.connect((TCP_IP, TCP_PORT))

@@ -7,6 +7,7 @@ class udp_pubsub:
 	participants		= {}
 	other_nodes_msgs    = {}
 	sock                = ''
+	data				= '' # Squarcle data
 
 
 	'''
@@ -17,11 +18,12 @@ class udp_pubsub:
 	It generates neighboting nodes ips too
 	'''
 
-	def __init__(self, udp_subnet, participants):
+	def __init__(self, udp_subnet, participants, data):
 		self.udp_subnet          = udp_subnet
 		self.participants		 = participants
 		self.neighboring_nodes_ips(udp_subnet, participants)
 		self.other_nodes_msgs    = {}
+		self.data				 = data
 		# It should start udp_subscriber thread and udp_publisher thread
 
 
