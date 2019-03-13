@@ -26,8 +26,8 @@ class squarcle_data:
     #################################these are constants that would be used###################################################
     ##GUI designer needs to adjust these parameters based on the view and size of display used
     THRESHOLD = 50 ##this is used as collision distance
-    MAX_X = 100
-    MAX_Y  = 100
+    MAX_X = 1000
+    MAX_Y  = 1000
     SHIFT_X = 10 ##shift in X axis from border
     SHIFT_Y = 10 ##shift in Y axis from border
     #################################these are the same for all nodes##########################################################
@@ -66,6 +66,7 @@ class squarcle_data:
         self.number_of_nodes = number_of_nodes
         self.node_ID = node_ID
         self.all_scores = [0] * number_of_nodes
+        self.randomize_corners()
 
     def set_number_of_nodes(self, number_of_nodes):
         self.number_of_nodes = number_of_nodes
@@ -141,6 +142,22 @@ class squarcle_data:
             dist = pow(self.current_sequance[0] - self.node_center[0], 2) + pow(self.current_sequance[1] - self.node_center[1], 2)
             if dist < self.THRESHOLD and self.sequence[0]:
                 self.set_sequance()
+
+    def randomize_corners(self):
+        x_slice = int(self.MAX_X / self.number_of_nodes)
+        y_slice = int(self.MAX_Y / self.number_of_nodes)
+        list_of_regions = []
+        for i in range(1, self.number_of_nodes):
+            for j in range(1, self.number_of_nodes):
+                list_of_regions.append([False, ((x_slice * i), (y_slice * j))])
+        for i in range(0, self.number_of_nodes):
+            while True:
+                m = random.randint(0, len(list_of_regions))
+                if not list_of_regions[m][0]:
+                    list_of_regions[m][0] = True
+                    self.corners.append(list_of_regions[m][1])
+                    break
+
 
     def rank_scores(self):
         for j in range(0, self.number_of_nodes):
