@@ -158,7 +158,6 @@ class squarcle_data:
                     self.corners.append(list_of_regions[m][1])
                     break
 
-
     def rank_scores(self):
         for j in range(0, self.number_of_nodes):
             for i in range(0, self.number_of_nodes):
