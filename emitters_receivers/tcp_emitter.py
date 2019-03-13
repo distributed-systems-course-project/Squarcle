@@ -5,12 +5,8 @@ import socket
 TCP_IP = '192.168.1.108'		# Put here Pi's IP address
 TCP_PORT = 25000					# Put here Master-to-Slave
 BUFFER_SIZE = 1024
-#MESSAGE = "image"				# Choose one of these messages
-#MESSAGE = "board"				# The information will be echoed to your computer
-#MESSAGE = "pieces"
-#MESSAGE = "piece"
-#MESSAGE = "arm"
-MESSAGE = '108.mokhtar'
+#MESSAGE = '108.mokhtar'
+MESSAGE = 'True.mokhtar.108.Juhha.125.Puhutko.201' # start the game message
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
 	s.connect((TCP_IP, TCP_PORT))

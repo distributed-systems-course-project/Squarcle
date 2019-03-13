@@ -10,13 +10,15 @@ class Tcp_Initiator:
 	sock = '' # Socket
 	node_id = 0
 	data = '' # Squarecle data object
+	node_subnet_ip = ''
 
-	def __init__(self, tcp_ip, tcp_port, node_id, data):
+	def __init__(self, tcp_ip, tcp_port, node_id, node_subnet_ip, data):
 		self.tcp_ip = tcp_ip
 		self.tcp_port = tcp_port
 		self.node_id = node_id
 		self.BUFFER_SIZE = 1024
 		self.participants = dict()
+		self.node_subnet_ip = node_subnet_ip
 		self.data = data
 
 
@@ -111,6 +113,17 @@ class Tcp_Initiator:
 		print(msg_struct)
 		return '.'.join(msg_struct)
 
+
+	'''
+	neighboring nodes ips function uses provided subnet to formulate
+	IP addresses of other discovered nodes.
+	The results are stores in the global variable participants
+	'''
+	def neighboring_nodes_ips(self, participants):
+		for node_id, udp_ports in participants.items():
+			udp_ports.append( self.node_subnet_ip + '.' +  str(udp_ports[0]) )
+		return participants
+
 	'''
 	Used when user needs to join a game !
 	'''
@@ -135,7 +148,7 @@ class Tcp_Initiator:
 				if data: break
 
 			self.participants = self.extract_master_msg(data)	# master is stored here
-			print(self.participants)
+			
 		finally:
 			self.sock.close()
 
@@ -150,18 +163,105 @@ class Tcp_Initiator:
 
 		udp_ports = list(map(int, participant[2:]))
 
-		udp_ports.insert(0, participant[0])
+		udp_ports.insert(0, int(participant[0]))
 
 		participant = { str(participant[1]) :  udp_ports } # participant = {'node_ID': [<node_name>, <udp_L_port>, <udp_P_port>]}
-		print('From extracting master msg')
-		print(participant)
+		
 		return participant
 
 	
 	'''
 	Start the game
 	'''
-	
+	def start_the_game(self, participants, master):
+		if master:
+
+			self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		
+			for node_name, neighbor_param in participants.items():
+				self.sock.connect((neighbor_param[-1], self.tcp_port))
+
+				message = self.start_msg_builder(participants)
+
+				self.sock.send(message.encode('utf-8'))
+
+				data = self.sock.recv(self.BUFFER_SIZE)
+
+			self.sock.close()			
+
+		else:
+			self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			keys = list(participants.keys())
+
+			TCP_IP = participants[ keys[0] ][-1]
+
+			self.sock.bind((TCP_IP, self.tcp_port))
+			self.sock.listen(1)
+
+			conn, addr = self.sock.accept()
+
+			while 1:
+				data = conn.recv(self.BUFFER_SIZE)
+				if not data: break
+				data = data.decode('ascii')
+
+				data = self.extract_start_msg_and_update_data(data)
+				
+				msg = "OK"
+				conn.send(msg.encode('utf-8'))  # echo
+
+
+			self.sock.close()
+			#self.sock.connect((self.participants[], self.tcp_port))
+
+	'''
+	Starting msg has the form
+	True.node_name.node_id
+	'''
+	def start_msg_builder(self, participants):
+		
+		self.data.acquire()
+		self.data.nodes_at_game_start = participants
+		self.data.number_of_nodes = len(participants)
+		self.data.play_from_com = True
+		self.data.release()
+
+		message = 'True.'
+
+		# Get all participants' keys
+		keys = list(participants.keys())
+
+		# Build the msg
+		for key in keys:
+			message+= (key + '.')	
+
+			message+= (str(participants[key][0]) + '.') # node id that corresponds to that key
+
+		return message[:-1]
+
+
+	'''
+	Start message extracter
+	data should have the form
+	True.node_name1.node_id1.node_name2.node_id2.......
+	'''
+	def extract_start_msg_and_update_data(self, data):
+		data = data.split('.')
+		start_bool = bool(data[0])
+		del data[0]
+		participants = {}
+		
+		print(data)
+
+		for i in range(0, len(data), 2):
+			participants[data[i]] = [int(data[i+1])]
+
+		self.data.acquire()
+		self.data.nodes_at_game_start = participants
+		self.data.number_of_nodes = len(participants)
+		self.data.play_from_com = start_bool
+		self.data.release()
+		self.participants = participants
 
 
 	'''
@@ -174,5 +274,8 @@ class Tcp_Initiator:
 			pass
 		return
 
+	'''
+	getters
+	'''
 	def get_participants(self):
 		return self.participants

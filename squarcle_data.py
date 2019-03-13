@@ -36,12 +36,14 @@ class squarcle_data:
     all_scores = [["name", 0]] #this has the scores of all nodes
     all_scores_ready = False
     playability = False
+    nodes_at_game_start = {}
     corners = [] #this has the centers of corners, once GUI makes polygon assign centers to this list
     lock = 0 #this is a lock for the shared data, use it between all threads for synchronization
     ##################################these are specific for one node##########################################################
     node_ID = 0 ##this will be used for voting purposes to choose admin, and also it is the first position of a node in the game
     name = "name" ## this has node name, any identifier is fine
     play = False #updated when game is to start, with the communication thread
+    play_from_com = False
     end = False #updated by the end of the sequance or game_over, to know if node lost or won, check sequance[0] == number_of_nodes
     lost = False #set when end is set, to check whether the node won or lost
     score = 0 #this has the score of the current node
