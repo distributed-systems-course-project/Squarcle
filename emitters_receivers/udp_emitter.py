@@ -1,9 +1,9 @@
 import socket
 import sys
 
-UDP_IP = "100.72.32.32"
+UDP_IP = "192.168.1.104"
 UDP_PORT = int(sys.argv[1])
-MESSAGE = '.'.join(['32' , '100', '200' , '1500'])
+MESSAGE = '.'.join(['104' , '100', '200' , '1500'])
 
 print("UDP target IP:", UDP_IP)
 print("UDP target port:", UDP_PORT)
