@@ -6,7 +6,7 @@ root = Tk()
 
 root.geometry('920x800')
 c = Canvas(root,width=800,height=600,bg='black')
-
+#hello
 def _create_circle(self, x, y, r, color):
     return self.create_oval(x-r, y-r, x+r, y+r, outline=color, fill=color)
 tk.Canvas.create_circle = _create_circle
