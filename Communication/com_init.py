@@ -25,13 +25,16 @@ class Com_Init:
 	node_ip = "";
 	node_tcp_port = 0;
 	node_subnet_ip = 0;
-
+	playability = False # playability 
+	data = '' # Squarcle object
 
 	# Constructor
-	def __init__(self):
+	def __init__(self, data):
 		'''
 		In the following section we will get the IP address of the wireless device of the node
 		'''
+		self.data = data
+
 		device = ""
 		devices = netifaces.interfaces()
 		for x in devices:
@@ -43,9 +46,15 @@ class Com_Init:
 		if device: # a wireless device with 'w' letter in its name was found !
 			self.node_ip  = netifaces.ifaddresses(netifaces.interfaces()[devices.index(device)])[netifaces.AF_INET][0]['addr']
 			self.can_play = True
+
 		else: # No wireless device with 'w' in its name
 			self.can_play = False
 		
+		data.acquire()
+		data.set_playability(self.can_play)
+		data.release()
+			
+
 		if self.can_play:
 			self.node_nbr = self.genrate_node_nbr(self.node_ip)
 			self.node_subnet_ip = self.generate_node_subnet_ip(self.node_ip)
@@ -53,9 +62,11 @@ class Com_Init:
 			# Checking the availability of the port
 			
 			self.node_tcp_port = self.INITIAL_TCP_PORT
-		
-		#else => couldn't get node IP address => This node can't play the game !
 
+		#else => couldn't get node IP address => This node can't play the game !
+		data.acquire()
+		data.set_node_ID(int(self.node_nbr))
+		data.release()
 
 	'''
 	Function used to generate node number
