@@ -20,7 +20,7 @@ colors = ["blue", "red", "white"]
 
 for i in range(len(center)):
     c.create_circle(center[i][0],center[i][1], 5, color=colors[i])
-
+#flff
 x=100
 y=100
 c.pack()
