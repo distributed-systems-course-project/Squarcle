@@ -157,5 +157,5 @@ class ComOrchestrator:
 		udp_pubsub.udp_subscriber()
 		
 		# Use udp_pubsub udp_publisher to send data to other nodes
-		udp_pubsub.udp_publisher() 
+		#udp_pubsub.udp_publisher() 
 		

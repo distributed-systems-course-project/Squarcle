@@ -3,7 +3,6 @@ import socket
 
 class udp_pubsub:
 
-	udp_subnet          = ""
 	participants		= {}
 	slave_participants	= {}
 	other_nodes_msgs    = {}
@@ -22,7 +21,6 @@ class udp_pubsub:
 	'''
 
 	def __init__(self, participants, data, master,slave_participants={}):
-		self.udp_subnet          = udp_subnet
 		self.participants		 = participants
 		self.other_nodes_msgs    = {}
 		self.data				 = data
@@ -77,18 +75,18 @@ class udp_pubsub:
 		message = ''
 
 		# starting by current node information
-		message = name + '.' +							# node_name.
-				  str(current_node_location[0]) + '.' + # cx.
-				  str(current_node_location[1]) + '.' + # cy.
-				  str(current_node_score)		+ '.'
+		message = ( name + '.' +						# node_name.
+				    str(current_node_location[0]) + '.' +  # cx
+				    str(current_node_location[1]) + '.' + # cy.
+				    str(current_node_score)		+ '.' )
 
 		if self.master:
 			# appending other nodes informations
 			for i in range(len(nodes_centers)): # nodes_centers[['name', [cx,cy]],..]
-				message+= nodes_centers[i][0]    + '.' + # node_name.
-						  nodes_centers[i][1][0] + '.' + # cx
-						  nodes_centers[i][1][1] + '.' + # cy
-						  all_score[i][1]		 + '.'   # score
+				message+= ( nodes_centers[i][0]    + '.' + # node_name.
+						    nodes_centers[i][1][0] + '.' + # cx
+						    nodes_centers[i][1][1] + '.' + # cy
+						    all_score[i][1]		 + '.' )  # score
 
 
 
@@ -108,9 +106,10 @@ class udp_pubsub:
 		try:
 
 			for node_id in self.participants:
-				IP   = self.participants[node_id][2] # IP of neighbor
-				PORT = self.participants[node_id][1] # Neighbor's publishing port (we listener to the publishing port of the neighbor)
+				IP   = self.participants[node_id][-1] # IP of neighbor
+				PORT = self.participants[node_id][2] # Neighbor's publishing port (we listener to the publishing port of the neighbor)
 				
+				print('IP: {}, PORT: {}'.format(IP, PORT))
 				self.sock.bind((IP, PORT))
 
 				data, addr = self.sock.recvfrom(1024) # buffer size is 1024 bytes
@@ -158,7 +157,10 @@ class udp_pubsub:
 
 			self.received_centers = centers_gatherer
 			self.received_scores  = score_gatherer
-
+			
+			print('Treated received udp msg')
+			print(self.received_centers)
+			print(self.received_scores)
 			return
 
 
@@ -168,7 +170,7 @@ class udp_pubsub:
 	The message will be decomposed using data_extraction_from_udp_msg
 	Once data is extracted, this function will update the shared data store
 	'''
-	def update_squarcle_data(self, received_update):
+	def update_squarcle_data(self):
 		self.data.acquire()
 		self.data.set_nodes_centers(self.received_centers)
 		self.data.set_all_scores(self.received_scores)
