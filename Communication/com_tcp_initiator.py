@@ -29,7 +29,7 @@ class Tcp_Initiator:
 		TCP_PORT: (integer) server's tcp open port
 		MESSAGE: (string) Message to send to the server
 	return
-		data: (binary stirng) server reply message to our sent message
+		data: (binary string) server reply message to our sent message
 	Note that tcp_connection initializes the tcp_ip connection of  the client to the server
 	the message in encoded into binary string so that it can be sent
 	'''
@@ -241,7 +241,7 @@ class Tcp_Initiator:
 
 
 	'''
-	Start message extracter
+	Start message extractor
 	data should have the form
 	True.node_name1.node_id1.node_name2.node_id2.......
 	'''
@@ -265,7 +265,7 @@ class Tcp_Initiator:
 
 
 	'''
-	Needed to close connection socket if something unexpeceted happened
+	Needed to close connection socket if something unexpected happened
 	'''
 	def close_tcp_listener(self):
 		try:
