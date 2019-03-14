@@ -2,7 +2,7 @@
 import socket
 
 
-TCP_IP = '192.168.1.108'		# Put here your computer's IP
+TCP_IP = '100.72.32.32'		# Put here your computer's IP
 TCP_PORT = 25000					# Put here the Slave-to-Master Port
 BUFFER_SIZE = 1024 # Normally 1024, but we want fast response
 
