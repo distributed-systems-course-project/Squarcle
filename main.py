@@ -8,7 +8,7 @@ data = squarcle_data()
 orchestrator_obj = ComOrchestrator(data)
 
 # Check if user has a wireless card connected !
-if orchestrator_obj.get_playability():
+if data.playability:
 	# User can play the game
 
 	# This should be replaced by a function from the GUI
@@ -35,7 +35,7 @@ else:
 
 ##once launched, and number of nodes is known in the communication thread, call set_parameters
 ##Also you need to decide a unique ID for each node, this could be ordering by connection time, like 0, 1, 2 depending on connecting rank
-data.set_parameters(4, 1)
+#data.set_parameters(4, 1)
 
 
 ##GUI continues
@@ -46,5 +46,5 @@ data.set_name("myName")
 data.release()
 '''
 #=======
-print(data.corners)
+#print(data.corners)
 
