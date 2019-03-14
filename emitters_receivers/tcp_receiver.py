@@ -20,7 +20,7 @@ while 1:
     data = data.decode('ascii')
     print("Master receive from slave: ", data)
     data = data.split('.')
-    msg = '108' + '.' + 'Master_name' + ".25001.25002"
+    msg = '32' + '.' + 'Master_name' + ".25001.25002"
     conn.send(msg.encode('utf-8'))  # echo
 	
 conn.close()

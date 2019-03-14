@@ -104,6 +104,9 @@ class ComOrchestrator:
 		self.data.nodes_at_game_start = participants
 		self.data.release()		
 
+		print("Slave participants")
+		print(participants)
+
 		'''
 		udp_pubsub = com_udp_pubsub.udp_pubsub(self.com_init_obj.get_node_subnet_ip(), self.tcp_obj.get_participants())
 		print('From udp_pubsub')
@@ -129,7 +132,7 @@ class ComOrchestrator:
 		self.data.acquire()
 		participants = self.data.nodes_at_game_start
 		self.data.release()
-		
+
 		if master:
 
 			# Publish start message
