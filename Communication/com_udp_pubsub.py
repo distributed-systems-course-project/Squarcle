@@ -42,10 +42,11 @@ class udp_pubsub:
 
 		MESSAGE = MESSAGE.encode('utf-8') # encoding the message before sending it
 
-		print('Message from UDP'.format(MESSAGE))
+		print('Message from UDP: {}'.format(MESSAGE))
 
 		self.sock = socket.socket(socket.AF_INET, # Internet
 		                     socket.SOCK_DGRAM) # UDP
+		print('participants: {}'.format(len(self.participants)))
 		try:
 			for node_id in self.participants:
 				IP   = self.participants[node_id][-1]
@@ -64,6 +65,7 @@ class udp_pubsub:
 	'''
 
 	def message_formulation(self):
+		
 		self.data.acquire()
 		nodes_centers          = self.data.nodes_centers		# [['name', [cx, cy]]]
 		current_node_location  = self.data.node_center #[cx, cy]
@@ -74,19 +76,20 @@ class udp_pubsub:
 		
 		message = ''
 
-		# starting by current node information
-		message = ( name + '.' +						# node_name.
-				    str(current_node_location[0]) + '.' +  # cx
-				    str(current_node_location[1]) + '.' + # cy.
-				    str(current_node_score)		+ '.' )
-
 		if self.master:
 			# appending other nodes informations
 			for i in range(len(nodes_centers)): # nodes_centers[['name', [cx,cy]],..]
-				message+= ( nodes_centers[i][0]    + '.' + # node_name.
-						    nodes_centers[i][1][0] + '.' + # cx
-						    nodes_centers[i][1][1] + '.' + # cy
-						    all_score[i][1]		 + '.' )  # score
+				message+= ( str(nodes_centers[i][0])    + '.' + # node_name.
+						    str(nodes_centers[i][1][0]) + '.' + # cx
+						    str(nodes_centers[i][1][1]) + '.' + # cy
+						    str(all_score[i][1])		 + '.' )  # score
+		else:
+			# starting by current node information
+			message = ( current_node_name + '.' +						# node_name.
+					    str(current_node_location[0]) + '.' +  # cx
+					    str(current_node_location[1]) + '.' + # cy.
+					    str(current_node_score)		+ '.' )
+
 
 
 
