@@ -3,6 +3,11 @@ from ComOrchestrator import ComOrchestrator
 import threading
 
 data = squarcle_data()
+#Starting GUI to acquire initial information
+
+
+
+
 ##Launching the communication thread here
 # Initialiting a communication orchestrator object
 orchestrator_obj = ComOrchestrator(data)
@@ -39,12 +44,7 @@ else:
 
 
 ##GUI continues
-#first thing, set name once u get it from user
-'''
-data.acquire()
-data.set_name("myName")
-data.release()
-'''
+
 #=======
 #print(data.corners)
 

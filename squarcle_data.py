@@ -26,8 +26,8 @@ class squarcle_data:
     #################################these are constants that would be used###################################################
     ##GUI designer needs to adjust these parameters based on the view and size of display used
     THRESHOLD = 50 ##this is used as collision distance
-    MAX_X = 1000
-    MAX_Y  = 1000
+    MAX_X = 600
+    MAX_Y  = 800
     SHIFT_X = 10 ##shift in X axis from border
     SHIFT_Y = 10 ##shift in Y axis from border
     #################################these are the same for all nodes##########################################################
@@ -39,6 +39,10 @@ class squarcle_data:
     nodes_at_game_start = {}
     corners = [] #this has the centers of corners, once GUI makes polygon assign centers to this list
     lock = 0 #this is a lock for the shared data, use it between all threads for synchronization
+    colours = []
+    corners_and_colours_pairs = 0
+    next_color_corner_pair = 0
+    color_counter = 0
     ##################################these are specific for one node##########################################################
     node_ID = 0 ##this will be used for voting purposes to choose admin, and also it is the first position of a node in the game
     name = "name" ## this has node name, any identifier is fine
@@ -72,6 +76,9 @@ class squarcle_data:
         self.node_ID = node_ID
         self.all_scores = [0] * number_of_nodes
         self.randomize_corners()
+        self.generate_colors()
+        self.corners_and_colours_pairs = [self.corners, self.colours]
+        self.next_color_corner_pair = [self.corners_and_colours_pairs[0][self.color_counter],self.corners_and_colours_pairs[1][self.color_counter]]
 
     def set_number_of_nodes(self, number_of_nodes):
         self.number_of_nodes = number_of_nodes
@@ -156,6 +163,8 @@ class squarcle_data:
             dist = pow(self.current_sequance[0] - self.node_center[0], 2) + pow(self.current_sequance[1] - self.node_center[1], 2)
             if dist < self.THRESHOLD and self.sequence[0]:
                 self.set_sequance()
+                self.color_counter = self.color_counter + 1
+                self.next_color_corner_pair = self.corners_and_colours_pairs[self.color_counter]
 
     def randomize_corners(self):
         x_slice = int(self.MAX_X / self.number_of_nodes)
@@ -171,7 +180,13 @@ class squarcle_data:
                     list_of_regions[m][0] = True
                     self.corners.append(list_of_regions[m][1])
                     break
-
+    def generate_colors(self):
+        c = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f']
+        for j in range(0, self.number_of_nodes):
+            x = "#"
+            for i in range(0,6):
+                x = x + c[random.randint(0,15)]
+            self.colours.append(x)
     def rank_scores(self):
         for j in range(0, self.number_of_nodes):
             for i in range(0, self.number_of_nodes):
