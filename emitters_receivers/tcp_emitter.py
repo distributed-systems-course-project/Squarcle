@@ -2,10 +2,10 @@
 import socket
 
 
-TCP_IP = '192.168.1.108'		# Put here Pi's IP address
+TCP_IP = '100.72.32.32'		# Put here Pi's IP address
 TCP_PORT = 25000					# Put here Master-to-Slave
 BUFFER_SIZE = 1024
-#MESSAGE = '108.mokhtar'
+#MESSAGE = '32.mokhtar'
 MESSAGE = 'True.mokhtar.108.Juhha.125.Puhutko.201' # start the game message
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:

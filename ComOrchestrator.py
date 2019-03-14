@@ -1,7 +1,7 @@
 # Temporal main for communication !
 from Communication import com_init 		   ## Initializer of communication parameters
 from Communication import com_tcp_initiator ## Other node addition manager
-from Communication import com_udp_pubsub	# UDP publish subscrib implementation 
+from Communication import com_udp_pubsub	# UDP publish subscribe implementation 
 from squarcle_data import squarcle_data
 import threading
 
@@ -75,26 +75,6 @@ class ComOrchestrator:
 		self.data.nodes_at_game_start = participants
 		self.data.release()
 
-		'''
-		add a new function here named master_game_starter
-		The function would be able to use participants from the shared squarcle_data
-		This thread should be called from the GUI start button click
-		It is simulated below as input()
-		It can be used as a master an slave with the right parameters !
-		'''
-		input('Press enter to start the game')
-		
-
-		# Publish start message
-		self.tcp_obj.start_the_game(participants, master=True)
-
-		print("Participants From ")
-		print(self.tcp_obj.get_participants())
-		print('Participants from Squarcle_data')
-		self.data.acquire()
-		print(self.data.nodes_at_game_start)
-		self.data.release()
-
 
 		'''
 		#Initialization of udp_pubsub object
@@ -110,7 +90,7 @@ class ComOrchestrator:
 
 		# Use udp_pubsub udp_publisher to send data to other nodes
 		udp_pubsub.udp_publisher([150,150,8000])
-		'''				
+		'''	
 
 	def slave_starter(self):
 
@@ -120,26 +100,12 @@ class ComOrchestrator:
 		self.tcp_obj.tcp_joiner(join_id, self.com_init_obj.get_node_subnet_ip())
 		participants = self.tcp_obj.neighboring_nodes_ips(self.tcp_obj.get_participants())
 		
-
-
-		'''
-		add a new function here named master_game_starter
-		The function would be able to use participants from the shared squarcle_data
-		This thread should be called from the GUI start button click
-		It is simulated below as input()
-		It can be used as a master an slave with the right parameters !
-		'''
-		# Wait for start instruction
-		input('Press enter to start the game')
-		self.tcp_obj.start_the_game(participants, master=False)
-
-
-		print("Participants From ")
-		print(self.tcp_obj.get_participants())
-		print('Participants from Squarcle_data')
 		self.data.acquire()
-		print(self.data.nodes_at_game_start)
-		self.data.release()
+		self.data.nodes_at_game_start = participants
+		self.data.release()		
+
+		print("Slave participants")
+		print(participants)
 
 		'''
 		udp_pubsub = com_udp_pubsub.udp_pubsub(self.com_init_obj.get_node_subnet_ip(), self.tcp_obj.get_participants())
@@ -153,3 +119,40 @@ class ComOrchestrator:
 		# Use udp_pubsub udp_publisher to send data to other nodes
 		udp_pubsub.udp_publisher([150,150,8000])
 		'''
+
+	def game_starter(self,master):
+
+		'''
+		add a new function here named master_game_starter
+		The function would be able to use participants from the shared squarcle_data
+		This thread should be called from the GUI start button click
+		It is simulated below as input()
+		It can be used as a master an slave with the right parameters !
+		'''
+		self.data.acquire()
+		participants = self.data.nodes_at_game_start
+		self.data.release()
+
+		if master:
+
+			# Publish start message
+			self.tcp_obj.start_the_game(participants, master=True)
+
+			print("Participants From ")
+			print(self.tcp_obj.get_participants())
+			print('Participants from Squarcle_data')
+			self.data.acquire()
+			print(self.data.nodes_at_game_start)
+			self.data.release()
+
+		else:
+
+			self.tcp_obj.start_the_game(participants, master=False)
+
+
+			print("Participants From ")
+			print(self.tcp_obj.get_participants())
+			print('Participants from Squarcle_data')
+			self.data.acquire()
+			print(self.data.nodes_at_game_start)
+			self.data.release()
