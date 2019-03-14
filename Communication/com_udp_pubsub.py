@@ -66,7 +66,7 @@ class udp_pubsub:
 	def message_formulation(self):
 		self.data.acquire()
 		nodes_centers          = self.data.nodes_centers		# [['name', [cx, cy]]]
-		current_node_location  = self.data.node_center_location #[cx, cy]
+		current_node_location  = self.data.node_center #[cx, cy]
 		all_score 	           = self.data.all_scores			#[['name', score]]
 		current_node_score     = self.data.score 				# score (int)
 		current_node_name 	   = self.data.name
@@ -116,7 +116,9 @@ class udp_pubsub:
 				
 				#print("received message:", data.decode('ascii'))
 				# Update the other_nodes_msgs
+				print('calling data_extraction_from_udp_msg...')
 				self.data_extraction_from_udp_msg(data.decode('ascii'))
+				print('Out of data_extraction_from_udp_msg...')
 				# Update shared store
 				self.update_squarcle_data()
 				
@@ -142,9 +144,9 @@ class udp_pubsub:
 
 			# Casting the message elements from strings to integers
 			self.received_centers.append( [str(received_info[0]),
-								 [ int(received_info[1]), int(received_info[1]) ] ] ) # [node_name, [cx, cy]]
+								 [ int(received_info[1]), int(received_info[2]) ] ] ) # [node_name, [cx, cy]]
 
-			self.received_scores.append( [str(received_info[0]), int(received_info[2]) ] ) # [node_name, score]
+			self.received_scores.append( [str(received_info[0]), int(received_info[3]) ] ) # [node_name, score]
 		
 		else:
 			# slave receives msg from master of the form : node_name1.cx1.cy1.score1.node_name2.cx2.cy2.score2...
@@ -158,10 +160,10 @@ class udp_pubsub:
 			self.received_centers = centers_gatherer
 			self.received_scores  = score_gatherer
 			
-			print('Treated received udp msg')
-			print(self.received_centers)
-			print(self.received_scores)
-			return
+		print('Treated received udp msg')
+		print(self.received_centers)
+		print(self.received_scores)
+		return
 
 
 

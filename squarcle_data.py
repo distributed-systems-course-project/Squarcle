@@ -6,7 +6,7 @@
 #####       -score and time to display them
 #####       -Name of node to display it in the GUI
 #####       -Play and End to know if there is a collision, if so take the other node center and name from collision
-#####       -Read current_sequance to get the center of the next sequance to be followed
+#####       -Read current_sequence to get the center of the next sequance to be followed
 #####       -Always check end before anything, if end is true, check lost, if lost is true display game over, else display
 #####       score and time while waiting for other nodes to be all done, this will be checked in all_scores_ready == true
 #####       -Once all nodes are ready, the ranked scores are in the list all_scores
@@ -49,7 +49,7 @@ class squarcle_data:
     lost = False #set when end is set, to check whether the node won or lost
     score = 0 #this has the score of the current node
     timer = [False, 0] #timer for node, set to True means started counting, second index has time which is incremented by 1s
-    node_center_location = [0,0] #this holds the location of the node in the plane, updated by GUI
+    node_center = [0,0] #this holds the location of the node in the plane, updated by GUI
     current_sequence = [0,0] #This is the sequance that needs to be achieved next, GUI uses this
     sequence = [0,[]]#first is index of current corner, updated every time a corner is reached, rest are colours of the sequance, first corner is the node_ID
     collision = ["name", [0,0]] #set this with the name of node that collided with this node, and put center
@@ -136,8 +136,8 @@ class squarcle_data:
         if self.sequence[0] == (self.number_of_nodes - 1):
             self.set_end(True)
         else:
-            self.set_current_sequance()
-    def set_current_sequance(self):
+            self.set_current_sequence()
+    def set_current_sequence(self):
         self.current_sequence = self.corners[self.sequence[1][self.sequence[0]]]
     def set_collision(self, collision):
         self.collision = collision
@@ -154,7 +154,7 @@ class squarcle_data:
 
     def check_distance_with_corners(self):
         if not self.end:
-            dist = pow(self.current_sequance[0] - self.node_center[0], 2) + pow(self.current_sequance[1] - self.node_center[1], 2)
+            dist = pow(self.current_sequence[0] - self.node_center[0], 2) + pow(self.current_sequence[1] - self.node_center[1], 2)
             if dist < self.THRESHOLD and self.sequence[0]:
                 self.set_sequance()
 
