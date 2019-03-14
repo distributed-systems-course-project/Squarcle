@@ -9,13 +9,20 @@ import tkinter as tk
 from tkinter import *
 from PyQt5 import QtCore, QtGui, QtWidgets
 from GUI import Main_Game
-
+from Score import Ui_Form
 
 class Ui_MainWindow(object):
    
     def open_game(self):
-        maingui=Main_Game()
+        
         MainWindow.hide()
+        maingui=Main_Game()
+        self.Window=QtWidgets.QMainWindow()
+        self.ui=Ui_Form()
+        self.ui.setupUi(self.Window)
+        self.Window.show()
+
+        MainWindow.close()
         
 
 
