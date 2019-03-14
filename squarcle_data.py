@@ -50,9 +50,9 @@ class squarcle_data:
     play_from_com = False
     end = False #updated by the end of the sequance or game_over, to know if node lost or won, check sequance[0] == number_of_nodes
     lost = False #set when end is set, to check whether the node won or lost
-    score = 0 #this has the score of the current node
+    score = 10 #this has the score of the current node
     timer = [False, 0] #timer for node, set to True means started counting, second index has time which is incremented by 1s
-    node_center_location = [0,0] #this holds the location of the node in the plane, updated by GUI
+    node_center = [0,0] #this holds the location of the node in the plane, updated by GUI
     current_sequence = [0,0] #This is the sequance that needs to be achieved next, GUI uses this
     sequence = [0,[]]#first is index of current corner, updated every time a corner is reached, rest are colours of the sequance, first corner is the node_ID
     collision = ["name", [0,0]] #set this with the name of node that collided with this node, and put center
@@ -174,8 +174,9 @@ class squarcle_data:
             for j in range(1, self.number_of_nodes):
                 list_of_regions.append([False, ((x_slice * i), (y_slice * j))])
         for i in range(0, self.number_of_nodes):
+            print(self.corners)
             while True:
-                m = random.randint(0, len(list_of_regions))
+                m = random.randint(0, len(list_of_regions)-1)
                 if not list_of_regions[m][0]:
                     list_of_regions[m][0] = True
                     self.corners.append(list_of_regions[m][1])

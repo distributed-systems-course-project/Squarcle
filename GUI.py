@@ -5,8 +5,11 @@ from tkinter import *
     
 
 class Main_Game(object):
-    def __init__(self):
-
+    s_data = 0
+    def __init__(self, s_data):
+        self.s_data = s_data
+        #remove later
+        self.s_data.set_play(True)
         
 
         def _create_circle(self, x, y, r, color):
@@ -27,9 +30,9 @@ class Main_Game(object):
         
         tk.Canvas.create_circle = _create_circle
 
-        center=[(15,20),(500,500),(300,300)]
+        center=self.s_data.corners_and_colours_pairs[0]
 
-        colors = ["blue", "red", "white"]
+        colors = self.s_data.corners_and_colours_pairs[1]
 
 
 
@@ -50,7 +53,9 @@ class Main_Game(object):
             c.move(shape, dx, dy)
             self.x=self.x
             self.y=self.y+10
-            
+            self.s_data.set_node_center([self.x, self.y])
+            # score variable
+            self.var_1.set(self.s_data.score)
 
         def up(zero) :
             
@@ -59,7 +64,9 @@ class Main_Game(object):
             c.move(shape, dx, dy)
             self.x=self.x
             self.y=self.y-10
-
+            self.s_data.set_node_center([self.x, self.y])
+            # score variable
+            self.var_1.set(self.s_data.score)
         def right(zero) :
             
             dx = 10
@@ -67,8 +74,9 @@ class Main_Game(object):
             c.move(shape, dx, dy)
             self.x=self.x+10
             self.y=self.y
-
-            
+            self.s_data.set_node_center([self.x, self.y])
+            # score variable
+            self.var_1.set(self.s_data.score)
 
         def left(zero) :
             global x
@@ -78,7 +86,9 @@ class Main_Game(object):
             c.move(shape, dx, dy)
             self.x=self.x-10
             self.y=self.y
-
+            self.s_data.set_node_center([self.x, self.y])
+            # score variable
+            self.var_1.set(self.s_data.score)
 
         root.bind("s", down)
         root.bind("z", up)
@@ -95,8 +105,7 @@ class Main_Game(object):
         
         self.score_label.place(bordermode=OUTSIDE, height=40, width=60,x=50,y=625)
         self.label_1.place(bordermode=OUTSIDE, height=50, width=50,x=140,y=620)
-        #score variable
-        self.var_1.set(self.x)
+
 
         #color label
         self.color_label=Label(root,text="Move to:",relief="solid",font="Times 14 bold ")
