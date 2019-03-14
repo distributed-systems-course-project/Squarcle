@@ -7,11 +7,13 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
-
-class Ui_Form(object):
-    def setupUi(self, Form, test):
-        print(test)
+from squarcle_data import squarcle_data
+from wait import Ui_MainWindow
+class Ui_Form_2(object):
+    s_data = squarcle_data()
+    def setupUi(self, Form, s_data):
+        self.s_data = s_data
+        print(s_data.name)
         Form.setObjectName("Form")
         Form.resize(414, 359)
         self.pushButton = QtWidgets.QPushButton(Form)
@@ -63,9 +65,24 @@ class Ui_Form(object):
         font.setWeight(75)
         self.label_3.setFont(font)
         self.label_3.setObjectName("label_3")
-
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
+        self.pushButton.clicked.connect(self.setParameters_join)
+        self.pushButton_2.clicked.connect(self.setParameters_create)
+    def setParameters_join(self):
+        self.s_data.set_name(self.textEdit.toPlainText())
+        self.s_data.set_node_ID(self.textEdit_2.toPlainText())
+
+    def setParameters_create(self):
+        self.s_data.set_name(self.textEdit.toPlainText())
+        self.s_data.set_node_ID(self.textEdit_2.toPlainText())
+        Form.hide()
+        wait_gui = Ui_MainWindow()
+        self.Window = QtWidgets.QMainWindow()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self.Window, "test")
+        self.Window.show()
+
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -81,9 +98,12 @@ class Ui_Form(object):
 
 if __name__ == "__main__":
     import sys
+    s_data = squarcle_data()
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form, 15)
+    ui = Ui_Form_2()
+    ui.setupUi(Form, s_data)
     Form.show()
     sys.exit(app.exec_())
+    print(s_data.name)
+

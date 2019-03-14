@@ -10,13 +10,14 @@ from tkinter import *
 from PyQt5 import QtCore, QtGui, QtWidgets
 from GUI import Main_Game
 from Score import Ui_Form
+from squarcle_data import squarcle_data
 
 class Ui_MainWindow(object):
-   
+    s_data = 0
     def open_game(self):
         
         MainWindow.hide()
-        maingui=Main_Game()
+        maingui=Main_Game(self.s_data)
         self.Window=QtWidgets.QMainWindow()
         self.ui=Ui_Form()
         self.ui.setupUi(self.Window)
@@ -26,7 +27,8 @@ class Ui_MainWindow(object):
         
 
 
-    def setupUi(self, MainWindow):
+    def setupUi(self, MainWindow, s_data):
+        self.s_data = s_data
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(508, 357)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -71,9 +73,11 @@ class Ui_MainWindow(object):
 
 if __name__ == "__main__":
     import sys
+    s_data = squarcle_data()
+    s_data.set_parameters(3, 1)
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
+    ui.setupUi(MainWindow, s_data)
     MainWindow.show()
     sys.exit(app.exec_())
