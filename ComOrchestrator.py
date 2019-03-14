@@ -154,8 +154,15 @@ class ComOrchestrator:
 													slave_participants = self.tcp_obj.get_participants())
 			
 		
-		#udp_pubsub.udp_subscriber()
+		subscriber_thread = threading.Thread(name='subscriber_thread', 
+											 target=udp_pubsub.udp_subscriber)
 		
 		# Use udp_pubsub udp_publisher to send data to other nodes
-		udp_pubsub.udp_publisher() 
+		publisher_thread = threading.Thread(name='publisher_thread',
+											 target= udp_pubsub.udp_publisher)
+
+		# Start the subscriber thread
+		subscriber_thread.start()
+		# Start the publisher thread
+		#publisher_thread.start() 
 		
