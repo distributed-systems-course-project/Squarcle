@@ -32,6 +32,7 @@ class squarcle_data:
     SHIFT_Y = 10 ##shift in Y axis from border
     #################################these are the same for all nodes##########################################################
     number_of_nodes = 0 #number of nodes in the game
+    nodes_to_admin = [] # Needed in Admin GUI (list of connected nodes !)
     nodes_centers = [["name", [0,0]]] #this should have information about node ID and center, ['A', (32,4)]
     all_scores = [["name", 0]] #this has the scores of all nodes
     all_scores_ready = False
@@ -63,7 +64,7 @@ class squarcle_data:
 
     def __init__(self):
         self.lock = threading.Lock()
-    
+        self.nodes_to_admin = [] # needed initialization 
 
     def release(self):
         self.lock.release()
@@ -90,6 +91,9 @@ class squarcle_data:
 
     def set_node_ID(self, node_ID):
         self.node_ID = node_ID
+
+    def set_nodes_to_admin(self, nodes_to_admin):
+        self.nodes_to_admin = nodes_to_admin
 
     def set_nodes_centers(self, nodes_centers):
         self.nodes_centers = nodes_centers

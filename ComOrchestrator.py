@@ -57,16 +57,23 @@ class ComOrchestrator:
 
 			for player in self.tcp_obj.get_participants():
 				print('Player "'+ str(player) + '" has joint the game !')
-
+				
+				## Adding connected 
+				self.data.acquire()
+				self.data.set_nodes_to_admin(self.data.nodes_to_admin.append(player))
+				isAllPlayersIn = self.data.com_master_thread_stop
+				self.data.release()
+			
 			answer = input('Are those all the players ?\n1 => yes \t 2 => no\n==> ')
-
+			
 			if answer == '1':
 				isAllPlayersIn = True
 				self.tcp_obj.close_tcp_listener() # close listener if still open
 
-
+		'''
 		for player, udp_ports in self.tcp_obj.get_participants().items():
 			print('Player: {} with ID: {} listening at {}, publishing at {}'.format(player, udp_ports[0], udp_ports[1], udp_ports[2]))
+		'''
 
 		# Building finalized participants dictionary {'node_name': [<node_ID>, <l_port>, <pub_port>, <IP>]}
 		participants = self.tcp_obj.neighboring_nodes_ips(self.tcp_obj.get_participants())
@@ -74,6 +81,9 @@ class ComOrchestrator:
 		self.data.acquire()
 		self.data.nodes_at_game_start = participants
 		self.data.release()
+
+	def close_master_tcp_connection(self):
+		self.tcp_obj.close_tcp_listener()
 
 
 	def slave_starter(self):
