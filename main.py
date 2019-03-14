@@ -25,8 +25,10 @@ if data.playability:
 		com_thread = threading.Thread(name='Com_thread', target=orchestrator_obj.slave_starter)
 		com_thread.start()
 
+	# Wait for all threads to join !
 	com_thread.join()
 	# Wait for start instruction
+	# This should be replaced by a function from the GUI
 	input('Press enter to start the game')
 
 	if choice == '1': # Master mode
@@ -35,6 +37,18 @@ if data.playability:
 	else: # Slave mode
 		com_thread = threading.Thread(name='Com_game_start', target=orchestrator_obj.game_starter, args=(False,))
 		com_thread.start()
+
+	# Wait for the start thread to join !
+	com_thread.join()
+	
+	input('Press enter to start UDP publisher')
+	if choice == '1': # Master mode
+		com_thread = threading.Thread(name='Com_UDP', target=orchestrator_obj.udp_start, args=(True,))
+		com_thread.start()
+	else: # Slave mode
+		com_thread = threading.Thread(name='Com_UDP', target=orchestrator_obj.udp_start, args=(False,))
+		com_thread.start()
+	
 
 
 else:

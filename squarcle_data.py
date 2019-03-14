@@ -37,6 +37,7 @@ class squarcle_data:
     all_scores_ready = False
     playability = False
     nodes_at_game_start = {}
+    slave_master = {} # Master parameters: needed when operating as a slave !
     corners = [] #this has the centers of corners, once GUI makes polygon assign centers to this list
     lock = 0 #this is a lock for the shared data, use it between all threads for synchronization
     ##################################these are specific for one node##########################################################
