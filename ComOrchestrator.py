@@ -66,7 +66,7 @@ class ComOrchestrator:
 
 
 		for player, udp_ports in self.tcp_obj.get_participants().items():
-			print('Player: {}, listening at {}, publishing at {}'.format(player, udp_ports[0], udp_ports[1]))
+			print('Player: {} with ID: {} listening at {}, publishing at {}'.format(player, udp_ports[0], udp_ports[1], udp_ports[2]))
 
 		# Building finalized participants dictionary {'node_name': [<node_ID>, <l_port>, <pub_port>, <IP>]}
 		participants = self.tcp_obj.neighboring_nodes_ips(self.tcp_obj.get_participants())
@@ -75,22 +75,6 @@ class ComOrchestrator:
 		self.data.nodes_at_game_start = participants
 		self.data.release()
 
-
-		'''
-		#Initialization of udp_pubsub object
-		udp_pubsub = com_udp_pubsub.udp_pubsub( self.com_init_obj.get_node_subnet_ip(), 
-												participants,
-												self.data)
-		print('From udp_pubsub')
-		print(udp_pubsub.get_participants_ips())
-		
-		udp_pubsub.udp_subscriber()
-		print('Neighbor said :')
-		print(udp_pubsub.get_other_nodes_msgs())
-
-		# Use udp_pubsub udp_publisher to send data to other nodes
-		udp_pubsub.udp_publisher([150,150,8000])
-		'''	
 
 	def slave_starter(self):
 
@@ -102,23 +86,13 @@ class ComOrchestrator:
 		
 		self.data.acquire()
 		self.data.nodes_at_game_start = participants
+		self.data.number_of_nodes	  = len(participants)
+		self.data.slave_master 		  = participants
 		self.data.release()		
 
-		print("Slave participants")
+		print("Slave's master is:")
 		print(participants)
 
-		'''
-		udp_pubsub = com_udp_pubsub.udp_pubsub(self.com_init_obj.get_node_subnet_ip(), self.tcp_obj.get_participants())
-		print('From udp_pubsub')
-		print(udp_pubsub.get_participants_ips())
-		
-		udp_pubsub.udp_subscriber()
-		print('Neighbor said :')
-		print(udp_pubsub.get_other_nodes_msgs())
-
-		# Use udp_pubsub udp_publisher to send data to other nodes
-		udp_pubsub.udp_publisher([150,150,8000])
-		'''
 
 	def game_starter(self,master):
 
@@ -156,3 +130,32 @@ class ComOrchestrator:
 			self.data.acquire()
 			print(self.data.nodes_at_game_start)
 			self.data.release()
+
+	def udp_start(self, master):
+
+		if master:
+			# Master
+			#Initialization of udp_pubsub object
+			udp_pubsub = com_udp_pubsub.udp_pubsub( self.tcp_obj.get_participants(),
+													self.data,
+													True) # Master mode = True
+
+		else:
+			# Slave
+
+			#Initialization of udp_pubsub object
+			self.data.acquire()
+			master_participant = self.data.slave_master
+			self.data.release()
+
+			udp_pubsub = com_udp_pubsub.udp_pubsub( master_participant,
+													self.data,
+													False,	# Master mode = False
+													slave_participants = self.tcp_obj.get_participants())
+			
+		
+		#udp_pubsub.udp_subscriber()
+		
+		# Use udp_pubsub udp_publisher to send data to other nodes
+		udp_pubsub.udp_publisher() 
+		

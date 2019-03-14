@@ -3,11 +3,14 @@ import socket
 
 class udp_pubsub:
 
-	udp_subnet          = ""
 	participants		= {}
+	slave_participants	= {}
 	other_nodes_msgs    = {}
+	master 				= False # Operating mode
 	sock                = ''
 	data				= '' # Squarcle data
+	received_centers	= []
+	received_scores 	= []
 
 
 	'''
@@ -15,27 +18,17 @@ class udp_pubsub:
 	Takes a string that contains master node subnet network
 	and dictionary of participants (created at tcp_listener class) 
 	Dictionary: {'participant_id': [listening_at, publishing_at]} udp ports
-	It generates neighboting nodes ips too
 	'''
 
-	def __init__(self, udp_subnet, participants, data):
-		self.udp_subnet          = udp_subnet
+	def __init__(self, participants, data, master,slave_participants={}):
 		self.participants		 = participants
-		self.neighboring_nodes_ips(udp_subnet, participants)
 		self.other_nodes_msgs    = {}
 		self.data				 = data
+		self.slave_participants  = slave_participants
+		self.master 			 = master
+		self.received_centers 	 = []
+		self.received_scores 	 = []
 		# It should start udp_subscriber thread and udp_publisher thread
-
-
-	'''
-	neighboring nodes ips function uses provided subnet to formulate
-	IP addresses of other discovered nodes.
-	The results are stores in the global variable participants
-	'''
-	def neighboring_nodes_ips(self, udp_subnet, participants):
-		for node_id, udp_ports in participants.items():
-			udp_ports.append( udp_subnet + '.' +  node_id )
-
 
 	'''
 	Publishes current node information and states to other neighboring nodes ! 
@@ -44,40 +37,64 @@ class udp_pubsub:
 	the published message form is described in message_formulation function 
 
 	'''
-	def udp_publisher(self, centers_score):
-		MESSAGE = self.message_formulation(centers_score) # Formulating the write msg to send
+	def udp_publisher(self):
+		MESSAGE = self.message_formulation() # Formulating the write msg to send
 
 		MESSAGE = MESSAGE.encode('utf-8') # encoding the message before sending it
+
+		print('Message from UDP'.format(MESSAGE))
 
 		self.sock = socket.socket(socket.AF_INET, # Internet
 		                     socket.SOCK_DGRAM) # UDP
 		try:
 			for node_id in self.participants:
-				IP   = self.participants[node_id][2]
-				PORT = self.participants[node_id][0]
+				IP   = self.participants[node_id][-1]
+				PORT = self.participants[node_id][1]
 				self.sock.sendto(MESSAGE, (IP, PORT))
 		finally:
 			self.sock.close()
 
 
 	'''
-	message_formulation function takes a list of ints of the form [<center_x>, <center_y>, <score>]
-	and transform it to a string ready to be sent !
-	The string has the form:
-	"node_id.center_x.center_y.score"
+	message_formulation function reads data from the shared squarcle_data and send it 
+	The operation is asynchronous (UDP) 
+
+	message format
+	node_name1.cx1.cy1.score1.node_name2.cx2.cy2.score2....
 	'''
 
-	def message_formulation(self, centers_score):
-		return '.'.join(list(map(str, centers_score)))
+	def message_formulation(self):
+		self.data.acquire()
+		nodes_centers          = self.data.nodes_centers		# [['name', [cx, cy]]]
+		current_node_location  = self.data.node_center #[cx, cy]
+		all_score 	           = self.data.all_scores			#[['name', score]]
+		current_node_score     = self.data.score 				# score (int)
+		current_node_name 	   = self.data.name
+		self.data.release()
+		
+		message = ''
+
+		# starting by current node information
+		message = ( name + '.' +						# node_name.
+				    str(current_node_location[0]) + '.' +  # cx
+				    str(current_node_location[1]) + '.' + # cy.
+				    str(current_node_score)		+ '.' )
+
+		if self.master:
+			# appending other nodes informations
+			for i in range(len(nodes_centers)): # nodes_centers[['name', [cx,cy]],..]
+				message+= ( nodes_centers[i][0]    + '.' + # node_name.
+						    nodes_centers[i][1][0] + '.' + # cx
+						    nodes_centers[i][1][1] + '.' + # cy
+						    all_score[i][1]		 + '.' )  # score
+
+
+
+		return message[:-1] # removing last '.'
 
 
 	'''
 	UDP subscriber
-
-	Result of its operation is stored in the dictionary other_nodes_msgs
-	other_nodes_msgs has the following structure
-	other_nodes_msgs = {<node_id>: [<center_y_coor>, <center_y_coor>, <score>]}
-
 	'''
 
 	def udp_subscriber(self):
@@ -89,40 +106,78 @@ class udp_pubsub:
 		try:
 
 			for node_id in self.participants:
-				IP   = self.participants[node_id][2] # IP of neighbor
-				PORT = self.participants[node_id][1] # Neighbor's publishing port (we listener to the publishing port of the neighbor)
+				IP   = self.participants[node_id][-1] # IP of neighbor
+				PORT = self.participants[node_id][2] # Neighbor's publishing port (we listener to the publishing port of the neighbor)
 				
+				print('IP: {}, PORT: {}'.format(IP, PORT))
 				self.sock.bind((IP, PORT))
 
 				data, addr = self.sock.recvfrom(1024) # buffer size is 1024 bytes
 				
-				print("received message:", data.decode('ascii'))
+				#print("received message:", data.decode('ascii'))
 				# Update the other_nodes_msgs
-				msg = self.message_reformulation(data.decode('ascii'))
+				print('calling data_extraction_from_udp_msg...')
+				self.data_extraction_from_udp_msg(data.decode('ascii'))
+				print('Out of data_extraction_from_udp_msg...')
+				# Update shared store
+				self.update_squarcle_data()
 				
-				if int(msg[0]) == int(node_id):
-					self.other_nodes_msgs[node_id] = msg[1:]
 		finally:
 			self.sock.close()
 
 
 	'''
-	Function message_reformulation used to convert the received udp packet from string
-	to a list of meaningful elements
-	the structure of the result is
-	[<center_x_coor>, <center_y_coor>, <node score>]
-	all elements are integers ! 
+	data_extraction_from_udp_msg
+	received msg have the following format
+	node_name1.cx1.cy1.score1
 	'''
-	def message_reformulation(self, message):
-		result = []
+	def data_extraction_from_udp_msg(self, message):
+		received_info 		  = []
+		centers_gatherer 	  = []
+		score_gatherer 		  = []
+
 		# splitting the message on '.'
-		result = message.split('.')
-		# Casting the message elements from strings to integers
-		result = list(map(int, result))
+		received_info = message.split('.')
+		
+		if self.master:
+			# master receives a msg of the form : node_name.cx.cy.score from slave
 
-		return result
+			# Casting the message elements from strings to integers
+			self.received_centers.append( [str(received_info[0]),
+								 [ int(received_info[1]), int(received_info[2]) ] ] ) # [node_name, [cx, cy]]
+
+			self.received_scores.append( [str(received_info[0]), int(received_info[3]) ] ) # [node_name, score]
+		
+		else:
+			# slave receives msg from master of the form : node_name1.cx1.cy1.score1.node_name2.cx2.cy2.score2...
+			for i in range(0, len(received_info), 4):
+				centers_gatherer.append( [ str(received_info[i]),
+									[ int(received_info[i+1]), int(received_info[i+2]) ] ] ) # [node_name, [cx, cy]]
+
+				score_gatherer.append([ str(received_info[i]),
+										int(received_info[i+3]) ])
+
+			self.received_centers = centers_gatherer
+			self.received_scores  = score_gatherer
+			
+		print('Treated received udp msg')
+		print(self.received_centers)
+		print(self.received_scores)
+		return
 
 
+
+	'''
+	After the reception of the message is confirmed from the subscriber
+	The message will be decomposed using data_extraction_from_udp_msg
+	Once data is extracted, this function will update the shared data store
+	'''
+	def update_squarcle_data(self):
+		self.data.acquire()
+		self.data.set_nodes_centers(self.received_centers)
+		self.data.set_all_scores(self.received_scores)
+		self.data.all_scores_ready = True
+		self.data.release()
 
 
 	'''

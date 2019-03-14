@@ -6,7 +6,7 @@
 #####       -score and time to display them
 #####       -Name of node to display it in the GUI
 #####       -Play and End to know if there is a collision, if so take the other node center and name from collision
-#####       -Read current_sequance to get the center of the next sequance to be followed
+#####       -Read current_sequence to get the center of the next sequance to be followed
 #####       -Always check end before anything, if end is true, check lost, if lost is true display game over, else display
 #####       score and time while waiting for other nodes to be all done, this will be checked in all_scores_ready == true
 #####       -Once all nodes are ready, the ranked scores are in the list all_scores
@@ -37,6 +37,7 @@ class squarcle_data:
     all_scores_ready = False
     playability = False
     nodes_at_game_start = {}
+    slave_master = {} # Master parameters: needed when operating as a slave !
     corners = [] #this has the centers of corners, once GUI makes polygon assign centers to this list
     lock = 0 #this is a lock for the shared data, use it between all threads for synchronization
     colours = []
@@ -142,8 +143,8 @@ class squarcle_data:
         if self.sequence[0] == (self.number_of_nodes - 1):
             self.set_end(True)
         else:
-            self.set_current_sequance()
-    def set_current_sequance(self):
+            self.set_current_sequence()
+    def set_current_sequence(self):
         self.current_sequence = self.corners[self.sequence[1][self.sequence[0]]]
     def set_collision(self, collision):
         self.collision = collision
@@ -160,7 +161,7 @@ class squarcle_data:
 
     def check_distance_with_corners(self):
         if not self.end:
-            dist = pow(self.current_sequance[0] - self.node_center[0], 2) + pow(self.current_sequance[1] - self.node_center[1], 2)
+            dist = pow(self.current_sequence[0] - self.node_center[0], 2) + pow(self.current_sequence[1] - self.node_center[1], 2)
             if dist < self.THRESHOLD and self.sequence[0]:
                 self.set_sequance()
                 self.color_counter = self.color_counter + 1
