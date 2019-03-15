@@ -38,7 +38,7 @@ class Main_Game(object):
 
 
         for i in range(len(center)):
-            c.create_circle(center[i][0],center[i][1], 5, color=colors[i])
+            c.create_circle(center[i][0],center[i][1], 15, color=colors[i])
         #flff
         self.x=100
         self.y=100
@@ -46,6 +46,7 @@ class Main_Game(object):
         shape=c.create_circle(100,100, r=20, color="#f00001")
 
         def down(zero) :
+            c.create_circle(750, 550, 50, color= colors[self.s_data.color_counter])
             #global x
             #global y
             dx = 0
@@ -58,7 +59,7 @@ class Main_Game(object):
             self.var_1.set(self.s_data.score)
 
         def up(zero) :
-            
+            c.create_circle(750, 550, 50, color= colors[self.s_data.color_counter])
             dx = 0
             dy = -10
             c.move(shape, dx, dy)
@@ -68,7 +69,8 @@ class Main_Game(object):
             # score variable
             self.var_1.set(self.s_data.score)
         def right(zero) :
-            
+            c.create_circle(750, 550, 50, color= colors[self.s_data.color_counter])
+
             dx = 10
             dy = 0
             c.move(shape, dx, dy)
@@ -79,6 +81,8 @@ class Main_Game(object):
             self.var_1.set(self.s_data.score)
 
         def left(zero) :
+            c.create_circle(750, 550, 50, color= colors[self.s_data.color_counter])
+
             global x
             global y
             dx = -10

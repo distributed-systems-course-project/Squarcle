@@ -127,7 +127,7 @@ class squarcle_data:
         self.node_center = node_center
 
     def set_timer(self):# call this function always before you release the lock to keep time up to date
-        self.timer[1] = int(time.time()) - self.timer[1]
+        self.timer[1] = int(time.time()/1000) - self.timer[1]
         self.timer[0] = True
         self.set_score()
 

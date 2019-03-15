@@ -16,7 +16,7 @@ class Ui_MainWindow(object):
     s_data = 0
     def open_game(self):
         
-        MainWindow.hide()
+        #MainWindow.close()
         maingui=Main_Game(self.s_data)
         self.Window=QtWidgets.QMainWindow()
         self.ui=Ui_Form()

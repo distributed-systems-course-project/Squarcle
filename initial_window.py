@@ -80,7 +80,7 @@ class Ui_Form_2(object):
         wait_gui = Ui_MainWindow()
         self.Window = QtWidgets.QMainWindow()
         self.ui = Ui_MainWindow()
-        self.ui.setupUi(self.Window, "test")
+        self.ui.setupUi(self.Window, self.s_data)
         self.Window.show()
 
 
@@ -102,8 +102,9 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
     ui = Ui_Form_2()
+    s_data.set_parameters(5,1)
+
     ui.setupUi(Form, s_data)
     Form.show()
     sys.exit(app.exec_())
-    print(s_data.name)
 
