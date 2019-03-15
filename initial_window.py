@@ -9,6 +9,9 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from squarcle_data import squarcle_data
 from wait import Ui_MainWindow
+from ComOrchestrator import ComOrchestrator
+import threading
+
 class Ui_Form_2(object):
     s_data = squarcle_data()
     def setupUi(self, Form, s_data):
@@ -74,11 +77,22 @@ class Ui_Form_2(object):
         self.s_data.set_name(self.textEdit.toPlainText())
         self.s_data.set_node_ID(int(self.textEdit_2.toPlainText()))
         self.s_data.release()
+        
 
+        
     def setParameters_create(self):
+        ##Launching the communication thread here
+        # Initializing a communication orchestrator object
+        orchestrator_obj = ComOrchestrator(self.s_data)
+        com_thread = threading.Thread()
+
         self.s_data.acquire()
         self.s_data.set_name(self.textEdit.toPlainText())
         self.s_data.release()
+        # This node is a master
+        com_thread = threading.Thread(name='Com_thread', target=orchestrator_obj.master_starter)
+        com_thread.start()
+
         Form.hide()
         wait_gui = Ui_MainWindow()
         self.Window = QtWidgets.QMainWindow()
