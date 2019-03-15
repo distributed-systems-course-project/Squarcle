@@ -74,7 +74,7 @@ class Ui_MainWindow(object):
 if __name__ == "__main__":
     import sys
     s_data = squarcle_data()
-    s_data.set_parameters(3, 1)
+    s_data.set_parameters(4, 1)
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()

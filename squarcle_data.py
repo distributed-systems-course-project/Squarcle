@@ -25,9 +25,9 @@ import threading
 class squarcle_data:
     #################################these are constants that would be used###################################################
     ##GUI designer needs to adjust these parameters based on the view and size of display used
-    THRESHOLD = 50 ##this is used as collision distance
-    MAX_X = 600
-    MAX_Y  = 800
+    THRESHOLD = 10 ##this is used as collision distance
+    MAX_X = 800
+    MAX_Y  = 600
     SHIFT_X = 10 ##shift in X axis from border
     SHIFT_Y = 10 ##shift in Y axis from border
     #################################these are the same for all nodes##########################################################
@@ -37,14 +37,14 @@ class squarcle_data:
     all_scores = [["name", 0]] #this has the scores of all nodes
     all_scores_ready = False
     playability = False
-    nodes_at_game_start = {}
+    nodes_at_game_start = {} #Key is name,
     slave_master = {} # Master parameters: needed when operating as a slave !
     corners = [] #this has the centers of corners, once GUI makes polygon assign centers to this list
     lock = 0 #this is a lock for the shared data, use it between all threads for synchronization
     colours = []
     corners_and_colours_pairs = 0
     next_color_corner_pair = 0
-    color_counter = 0
+    color_counter = 1
     ##################################these are specific for one node##########################################################
     node_ID = 0 ##this will be used for voting purposes to choose admin, and also it is the first position of a node in the game
     name = "name" ## this has node name, any identifier is fine
@@ -55,10 +55,8 @@ class squarcle_data:
     score = 10 #this has the score of the current node
     timer = [False, 0] #timer for node, set to True means started counting, second index has time which is incremented by 1s
     node_center = [0,0] #this holds the location of the node in the plane, updated by GUI
-    current_sequence = [0,0] #This is the sequance that needs to be achieved next, GUI uses this
-    sequence = [0,[]]#first is index of current corner, updated every time a corner is reached, rest are colours of the sequance, first corner is the node_ID
     collision = ["name", [0,0]] #set this with the name of node that collided with this node, and put center
-
+    starting_time = 0
 
 
 
@@ -68,7 +66,7 @@ class squarcle_data:
 
     def release(self):
         self.lock.release()
-        #self.set_timer()
+        self.set_timer()
 
     def acquire(self):
         self.lock.acquire()
@@ -80,7 +78,7 @@ class squarcle_data:
         self.randomize_corners()
         self.generate_colors()
         self.corners_and_colours_pairs = [self.corners, self.colours]
-        self.next_color_corner_pair = [self.corners_and_colours_pairs[0][self.color_counter],self.corners_and_colours_pairs[1][self.color_counter]]
+        self.next_color_corner_pair = [self.corners_and_colours_pairs[0][0],self.corners_and_colours_pairs[1][0]]
 
     def set_number_of_nodes(self, number_of_nodes):
         self.number_of_nodes = number_of_nodes
@@ -111,45 +109,32 @@ class squarcle_data:
         self.all_scores_ready = True
     def set_play(self, play):
         self.play = play
-        self.set_sequence_local()
+        self.starting_time = time.time()
         self.set_timer()
 
     def set_end(self, end):
         self.end = end
-        if self.sequence[0] == (self.number_of_nodes - 1):
+        if self.color_counter == (self.number_of_nodes - 1):
             self.lost = False
         else:
             self.lost = True
             self.score = 0
     def set_score(self):
-        if self.timer[1] != 0:
-            self.score = self.sequence[0] * 10 + int(100/self.timer[1]) ## I am using just this simple formula for score, think of something better
-        else:
-            self.score = 0
+        self.score = self.color_counter * 100
+        print(self.score)
         self.all_scores[self.node_ID] = self.score
     def set_node_center(self, node_center):
         self.node_center = node_center
+        self.check_distance_with_nodes()
+        self.check_distance_with_corners()
+
 
     def set_timer(self):# call this function always before you release the lock to keep time up to date
-        self.timer[1] = int(time.time()/1000) - self.timer[1]
+        self.timer[1] = int(time.time() - self.starting_time)
         self.timer[0] = True
-        self.set_score()
 
-    def set_sequence_local(self):
-        self.sequence[1].append(self.node_ID)
-        for i in range(1, self.number_of_nodes):
-            self.sequence[1].append(random.randint(0, self.number_of_nodes-1))
-            while self.sequence[1][i] == self.sequence[1][i-1]:
-                self.sequence[1][i] = random.randint(0, self.number_of_nodes-1)
-    def set_sequance(self):
-        self.sequence[0] = self.sequence[0] + 1
-        self.set_score()
-        if self.sequence[0] == (self.number_of_nodes - 1):
-            self.set_end(True)
-        else:
-            self.set_current_sequence()
-    def set_current_sequence(self):
-        self.current_sequence = self.corners[self.sequence[1][self.sequence[0]]]
+
+
     def set_collision(self, collision):
         self.collision = collision
         self.set_end(True)
@@ -165,12 +150,14 @@ class squarcle_data:
 
     def check_distance_with_corners(self):
         if not self.end:
-            dist = pow(self.current_sequence[0] - self.node_center[0], 2) + pow(self.current_sequence[1] - self.node_center[1], 2)
-            if dist < self.THRESHOLD and self.sequence[0]:
-                self.set_sequance()
+            dist = pow(pow(self.corners[self.color_counter][0] - self.node_center[0], 2) + pow(self.corners[self.color_counter][1] - self.node_center[1], 2), 0.5)
+            if dist < self.THRESHOLD:
                 self.color_counter = self.color_counter + 1
-                self.next_color_corner_pair = self.corners_and_colours_pairs[self.color_counter]
-
+                if self.color_counter == (self.number_of_nodes):
+                    self.set_end(True)
+                    return 0
+                self.set_score()
+                self.next_color_corner_pair = [self.corners_and_colours_pairs[0][self.color_counter], self.corners_and_colours_pairs[1][self.color_counter]]
     def randomize_corners(self):
         x_slice = int(self.MAX_X / self.number_of_nodes)
         y_slice = int(self.MAX_Y / self.number_of_nodes)
@@ -179,7 +166,6 @@ class squarcle_data:
             for j in range(1, self.number_of_nodes):
                 list_of_regions.append([False, ((x_slice * i), (y_slice * j))])
         for i in range(0, self.number_of_nodes):
-            print(self.corners)
             while True:
                 m = random.randint(0, len(list_of_regions)-1)
                 if not list_of_regions[m][0]:

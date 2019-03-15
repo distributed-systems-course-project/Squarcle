@@ -70,12 +70,15 @@ class Ui_Form_2(object):
         self.pushButton.clicked.connect(self.setParameters_join)
         self.pushButton_2.clicked.connect(self.setParameters_create)
     def setParameters_join(self):
+        self.s_data.acquire()
         self.s_data.set_name(self.textEdit.toPlainText())
-        self.s_data.set_node_ID(self.textEdit_2.toPlainText())
+        self.s_data.set_node_ID(int(self.textEdit_2.toPlainText()))
+        self.s_data.release()
 
     def setParameters_create(self):
+        self.s_data.acquire()
         self.s_data.set_name(self.textEdit.toPlainText())
-        self.s_data.set_node_ID(self.textEdit_2.toPlainText())
+        self.s_data.release()
         Form.hide()
         wait_gui = Ui_MainWindow()
         self.Window = QtWidgets.QMainWindow()

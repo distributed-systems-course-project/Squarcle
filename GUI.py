@@ -25,7 +25,7 @@ class Main_Game(object):
 
 
 
-        c = Canvas(root,width=800,height=600,bg='black')
+        c = Canvas(root,width=s_data.MAX_X,height=s_data.MAX_Y,bg='black')
 
         
         tk.Canvas.create_circle = _create_circle
@@ -38,61 +38,95 @@ class Main_Game(object):
 
 
         for i in range(len(center)):
-            c.create_circle(center[i][0],center[i][1], 15, color=colors[i])
+            c.create_circle(center[i][0],center[i][1], 16, color=colors[i])
         #flff
-        self.x=100
-        self.y=100
+        self.x=center[0][0]
+        self.y=center[0][1]
         c.pack()
-        shape=c.create_circle(100,100, r=20, color="#f00001")
+        shape=c.create_circle(center[0][0],center[0][1], r=15, color="#f00001")
+        c.create_circle(750, 550, 50, color=colors[self.s_data.color_counter])
 
         def down(zero) :
+            self.s_data.acquire()
+            if self.s_data.end:
+                return 10
+                #put transition to final window
+            self.s_data.release()
             c.create_circle(750, 550, 50, color= colors[self.s_data.color_counter])
             #global x
             #global y
             dx = 0
             dy = 10
-            c.move(shape, dx, dy)
-            self.x=self.x
-            self.y=self.y+10
-            self.s_data.set_node_center([self.x, self.y])
-            # score variable
-            self.var_1.set(self.s_data.score)
+            if (self.y + dy) < s_data.MAX_Y :
+                c.move(shape, dx, dy)
+                self.x=self.x
+                self.y=self.y+ dy
+                self.s_data.acquire()
+                self.s_data.set_node_center([self.x, self.y])
+                # score variable
+                self.var_1.set(self.s_data.score)
+                self.s_data.release()
 
         def up(zero) :
+            self.s_data.acquire()
+            if self.s_data.end:
+                return 10
+                #put transition to final window
+            self.s_data.release()
             c.create_circle(750, 550, 50, color= colors[self.s_data.color_counter])
             dx = 0
             dy = -10
-            c.move(shape, dx, dy)
-            self.x=self.x
-            self.y=self.y-10
-            self.s_data.set_node_center([self.x, self.y])
-            # score variable
-            self.var_1.set(self.s_data.score)
+            if self.y + dy > 0 :
+                c.move(shape, dx, dy)
+                self.x=self.x
+                self.y=self.y+dy
+                self.s_data.acquire()
+                self.s_data.set_node_center([self.x, self.y])
+                 # score variable
+                self.var_1.set(self.s_data.score)
+                self.s_data.release()
+
         def right(zero) :
+            self.s_data.acquire()
+            if self.s_data.end:
+                return 10
+                #put transition to final window
+            self.s_data.release()
             c.create_circle(750, 550, 50, color= colors[self.s_data.color_counter])
 
             dx = 10
             dy = 0
-            c.move(shape, dx, dy)
-            self.x=self.x+10
-            self.y=self.y
-            self.s_data.set_node_center([self.x, self.y])
-            # score variable
-            self.var_1.set(self.s_data.score)
+            if (self.x + dx) < s_data.MAX_X :
+                c.move(shape, dx, dy)
+                self.x=self.x+dx
+                self.y=self.y
+                self.s_data.acquire()
+                self.s_data.set_node_center([self.x, self.y])
+                   # score variable
+                self.var_1.set(self.s_data.score)
+                self.s_data.release()
 
         def left(zero) :
-            c.create_circle(750, 550, 50, color= colors[self.s_data.color_counter])
+            self.s_data.acquire()
+            if self.s_data.end:
+                return 10
+                #put transition to final window
+            self.s_data.release()
+            c.create_circle(750, 550, 50, color=colors[self.s_data.color_counter])
 
             global x
             global y
             dx = -10
             dy = 0
-            c.move(shape, dx, dy)
-            self.x=self.x-10
-            self.y=self.y
-            self.s_data.set_node_center([self.x, self.y])
-            # score variable
-            self.var_1.set(self.s_data.score)
+            if self.x + dx > 0 :
+                c.move(shape, dx, dy)
+                self.x=self.x+dx
+                self.y=self.y
+                self.s_data.acquire()
+                self.s_data.set_node_center([self.x, self.y])
+                # score variable
+                self.var_1.set(self.s_data.score)
+                self.s_data.release()
 
         root.bind("s", down)
         root.bind("z", up)
