@@ -194,9 +194,9 @@ class Tcp_Initiator:
 			self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			keys = list(participants.keys())
 
-			TCP_IP = participants[ keys[0] ][-1]
+			#TCP_IP = participants[ keys[0] ][-1] # I have Noticed a problem with it
 
-			self.sock.bind((TCP_IP, self.tcp_port))
+			self.sock.bind((self.tcp_ip, self.tcp_port))
 			self.sock.listen(1)
 
 			conn, addr = self.sock.accept()

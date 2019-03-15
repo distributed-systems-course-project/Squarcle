@@ -42,7 +42,7 @@ class Com_Init:
 
 		if user_os == 'Windows':
 			devices = self.get_connection_name_from_guid(devices)
-		print(devices)
+		
 		for x in devices:
 			for char in x:
 				if char == 'w': # Assuming wireless interface has a 'w' character in its name
