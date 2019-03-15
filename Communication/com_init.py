@@ -42,13 +42,13 @@ class Com_Init:
 
 		if user_os == 'Windows':
 			devices = self.get_connection_name_from_guid(devices)
-
+		print(devices)
 		for x in devices:
 			for char in x:
 				if char == 'w': # Assuming wireless interface has a 'w' character in its name
 					device = x
 					break
-
+		device = devices[-2]
 		if device: # a wireless device with 'w' letter in its name was found !
 			self.node_ip  = netifaces.ifaddresses(netifaces.interfaces()[devices.index(device)])[netifaces.AF_INET][0]['addr']
 			self.can_play = True

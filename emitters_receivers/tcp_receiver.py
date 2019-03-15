@@ -2,7 +2,7 @@
 import socket
 
 
-TCP_IP = '192.168.1.108'		# Put here your computer's IP
+TCP_IP = '192.168.1.106'		# Put here your computer's IP
 TCP_PORT = 25000					# Put here the Slave-to-Master Port
 BUFFER_SIZE = 1024 # Normally 1024, but we want fast response
 
@@ -20,7 +20,7 @@ while 1:
     data = data.decode('ascii')
     print("Master receive from slave: ", data)
     data = data.split('.')
-    msg = '108' + '.' + 'Master_name' + ".25001.25002"
+    msg = '106' + '.' + 'Master_name' + ".25001.25002"
     conn.send(msg.encode('utf-8'))  # echo
 	
 conn.close()

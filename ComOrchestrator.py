@@ -61,7 +61,6 @@ class ComOrchestrator:
 				## Adding connected 
 				self.data.acquire()
 				self.data.set_nodes_to_admin(self.data.nodes_to_admin.append(player))
-				isAllPlayersIn = self.data.com_master_thread_stop
 				self.data.release()
 			
 			answer = input('Are those all the players ?\n1 => yes \t 2 => no\n==> ')

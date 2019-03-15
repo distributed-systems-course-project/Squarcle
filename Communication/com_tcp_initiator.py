@@ -110,6 +110,7 @@ class Tcp_Initiator:
 	'''
 	def tcp_echo_msg(self, current_node_name,neighbor_id):
 		msg_struct = [str(current_node_name), str(self.node_id), str(self.participants[neighbor_id][1]), str(self.participants[neighbor_id][2])]
+		print('strcut msg')
 		print(msg_struct)
 		return '.'.join(msg_struct)
 

@@ -1,7 +1,7 @@
 import socket
 import sys
 
-UDP_IP = "192.168.1.108"
+UDP_IP = "192.168.1.106"
 UDP_PORT = int(sys.argv[1])
 MESSAGE = '.'.join(['mokhtar' , '100', '200' , '1500'])
 
