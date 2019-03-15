@@ -41,7 +41,7 @@ class Com_Init:
 		user_os = platform.system()
 
 		if user_os == 'Windows':
-			devices = get_connection_name_from_guid(x)
+			devices = self.get_connection_name_from_guid(devices)
 
 		for x in devices:
 			for char in x:
@@ -77,7 +77,7 @@ class Com_Init:
 	'''
 	Translating Windows interfaces to meaningful names
 	'''
-	def get_connection_name_from_guid(iface_guids):
+	def get_connection_name_from_guid(self, iface_guids):
 		import winreg as wr
 
 		iface_names = ['(unknown)' for i in range(len(iface_guids))]
