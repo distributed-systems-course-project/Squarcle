@@ -172,9 +172,8 @@ class ComOrchestrator:
 		publisher_thread = threading.Thread(name='publisher_thread',
 											 target= udp_pubsub.udp_publisher)
 
-		for i in range(20):
-			# Start the subscriber thread
-			subscriber_thread.start()
-			# Start the publisher thread
-			publisher_thread.start() 
+		# Start the subscriber thread
+		subscriber_thread.start()
+		# Start the publisher thread
+		publisher_thread.start() 
 		

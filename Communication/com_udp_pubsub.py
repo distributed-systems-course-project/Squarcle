@@ -40,22 +40,23 @@ class udp_pubsub:
 
 	'''
 	def udp_publisher(self):
-		MESSAGE = self.message_formulation() # Formulating the write msg to send
+		while True:
+			MESSAGE = self.message_formulation() # Formulating the write msg to send
 
-		MESSAGE = MESSAGE.encode('utf-8') # encoding the message before sending it
+			MESSAGE = MESSAGE.encode('utf-8') # encoding the message before sending it
 
-		print('Message from UDP: {}'.format(MESSAGE))
+			#print('Message from UDP: {}'.format(MESSAGE))
 
-		self.sock = socket.socket(socket.AF_INET, # Internet
-		                     socket.SOCK_DGRAM) # UDP
-		print('participants: {}'.format(len(self.participants)))
-		try:
-			for node_id in self.participants:
-				IP   = self.participants[node_id][-1]
-				PORT = self.participants[node_id][1]
-				self.sock.sendto(MESSAGE, (IP, PORT))
-		finally:
-			self.sock.close()
+			self.sock = socket.socket(socket.AF_INET, # Internet
+			                     socket.SOCK_DGRAM) # UDP
+			#print('participants: {}'.format(len(self.participants)))
+			try:
+				for node_id in self.participants:
+					IP   = self.participants[node_id][-1]
+					PORT = self.participants[node_id][1]
+					self.sock.sendto(MESSAGE, (IP, PORT))
+			finally:
+				self.sock.close()
 
 
 	'''
@@ -103,33 +104,32 @@ class udp_pubsub:
 	'''
 
 	def udp_subscriber(self):
-		self.other_nodes_msgs = {}	# Initializing other_nodes msgs to none
+		while True:
+			self.other_nodes_msgs = {}	# Initializing other_nodes msgs to none
 
-		self.sock = socket.socket(socket.AF_INET, # Internet
-		                     socket.SOCK_DGRAM) # UDP
+			self.sock = socket.socket(socket.AF_INET, # Internet
+			                     socket.SOCK_DGRAM) # UDP
 
-		try:
+			try:
 
-			for node_id in self.participants:
-				#IP   = self.participants[node_id][-1] # IP of neighbor
-				IP 	 = self.node_ip
-				PORT = self.participants[node_id][2] # Neighbor's publishing port (we listener to the publishing port of the neighbor)
-				
-				#print('IP: {}, PORT: {}'.format(IP, PORT))
-				self.sock.bind((IP, PORT))
+				for node_id in self.participants:
+					#IP   = self.participants[node_id][-1] # IP of neighbor
+					IP 	 = self.node_ip
+					PORT = self.participants[node_id][2] # Neighbor's publishing port (we listener to the publishing port of the neighbor)
+					
+					#print('IP: {}, PORT: {}'.format(IP, PORT))
+					self.sock.bind((IP, PORT))
 
-				data, addr = self.sock.recvfrom(1024) # buffer size is 1024 bytes
-				
-				#print("received message:", data.decode('ascii'))
-				# Update the other_nodes_msgs
-				print('calling data_extraction_from_udp_msg...')
-				self.data_extraction_from_udp_msg(data.decode('ascii'))
-				print('Out of data_extraction_from_udp_msg...')
-				# Update shared store
-				self.update_squarcle_data()
-				
-		finally:
-			self.sock.close()
+					data, addr = self.sock.recvfrom(1024) # buffer size is 1024 bytes
+					
+					#print("received message:", data.decode('ascii'))
+					# Update the other_nodes_msgs
+					self.data_extraction_from_udp_msg(data.decode('ascii'))
+					# Update shared store
+					self.update_squarcle_data()
+					
+			finally:
+				self.sock.close()
 
 
 	'''
@@ -165,10 +165,11 @@ class udp_pubsub:
 
 			self.received_centers = centers_gatherer
 			self.received_scores  = score_gatherer
-			
+		'''	
 		print('Treated received udp msg')
 		print(self.received_centers)
 		print(self.received_scores)
+		'''
 		return
 
 

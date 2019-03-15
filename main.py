@@ -57,7 +57,7 @@ if data.playability:
 		com_thread = threading.Thread(name='Com_UDP', target=orchestrator_obj.udp_start, args=(False,))
 		com_thread.start()
 	
-
+	print('End of the main program (UDP thread still running)')
 
 else:
 	# User cannot play this game since no wireless card was found on his device
