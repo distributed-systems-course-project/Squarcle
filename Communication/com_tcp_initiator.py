@@ -60,7 +60,7 @@ class Tcp_Initiator:
 				data = str(tmp.decode('ascii')) # data is the neighbor node ID
 				
 				data = self.first_msg_interpreter(data) # return a list [node_name, node_id]
-				
+				print(data)
 				# Generate 2 free udp port nbr
 				self.participants[data[1]] = [] # Keys of the dictionary are the IDs!
 				self.participants[data[1]].append(int(data[0])) # name of the node
@@ -138,7 +138,7 @@ class Tcp_Initiator:
 		
 		self.sock.connect((neighbor_ip, self.tcp_port))
 
-		to_send = node_name + '.' + str(self.node_id)		# Initial joining TCP msg has the form node_name.node_id
+		to_send = str(self.node_id) + '.' + node_name		# Initial joining TCP msg has the form node_name.node_id
 
 		try:
 			self.sock.sendall(to_send.encode('utf-8'))
@@ -163,9 +163,9 @@ class Tcp_Initiator:
 
 		udp_ports = list(map(int, participant[2:]))
 
-		udp_ports.insert(0, int(participant[0]))
+		udp_ports.insert(0, int(participant[1]))
 
-		participant = { str(participant[1]) :  udp_ports } # participant = {'node_ID': [<node_name>, <udp_L_port>, <udp_P_port>]}
+		participant = { str(participant[0]) :  udp_ports } # participant = {'node_ID': [<node_name>, <udp_L_port>, <udp_P_port>]}
 		
 		return participant
 
