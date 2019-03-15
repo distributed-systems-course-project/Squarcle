@@ -11,6 +11,7 @@ class udp_pubsub:
 	data				= '' # Squarcle data
 	received_centers	= []
 	received_scores 	= []
+	node_ip 			= '' # Current node IP
 
 
 	'''
@@ -20,7 +21,8 @@ class udp_pubsub:
 	Dictionary: {'participant_id': [listening_at, publishing_at]} udp ports
 	'''
 
-	def __init__(self, participants, data, master,slave_participants={}):
+	def __init__(self, node_ip, participants, data, master,slave_participants={}):
+		self.node_ip 			 = node_ip
 		self.participants		 = participants
 		self.other_nodes_msgs    = {}
 		self.data				 = data
@@ -109,10 +111,11 @@ class udp_pubsub:
 		try:
 
 			for node_id in self.participants:
-				IP   = self.participants[node_id][-1] # IP of neighbor
+				#IP   = self.participants[node_id][-1] # IP of neighbor
+				IP 	 = self.node_ip
 				PORT = self.participants[node_id][2] # Neighbor's publishing port (we listener to the publishing port of the neighbor)
 				
-				print('IP: {}, PORT: {}'.format(IP, PORT))
+				#print('IP: {}, PORT: {}'.format(IP, PORT))
 				self.sock.bind((IP, PORT))
 
 				data, addr = self.sock.recvfrom(1024) # buffer size is 1024 bytes

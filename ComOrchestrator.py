@@ -145,7 +145,8 @@ class ComOrchestrator:
 		if master:
 			# Master
 			#Initialization of udp_pubsub object
-			udp_pubsub = com_udp_pubsub.udp_pubsub( self.tcp_obj.get_participants(),
+			udp_pubsub = com_udp_pubsub.udp_pubsub( self.com_init_obj.get_node_ip(),
+													self.tcp_obj.get_participants(),
 													self.data,
 													True) # Master mode = True
 
@@ -157,7 +158,8 @@ class ComOrchestrator:
 			master_participant = self.data.slave_master
 			self.data.release()
 
-			udp_pubsub = com_udp_pubsub.udp_pubsub( master_participant,
+			udp_pubsub = com_udp_pubsub.udp_pubsub( self.com_init_obj.get_node_ip(),
+													master_participant,
 													self.data,
 													False,	# Master mode = False
 													slave_participants = self.tcp_obj.get_participants())
