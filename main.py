@@ -34,12 +34,15 @@ if data.playability:
 	com_thread.join()
 	# Wait for start instruction
 	# This should be replaced by a function from the GUI
-	input('Press enter to start the game')
-
+	
 	if choice == '1': # Master mode
+		# wait
+		input('Press enter to start the game')
+
 		com_thread = threading.Thread(name='Com_game_start', target=orchestrator_obj.game_starter, args=(True,))
 		com_thread.start()
 	else: # Slave mode
+		# start receiver
 		com_thread = threading.Thread(name='Com_game_start', target=orchestrator_obj.game_starter, args=(False,))
 		com_thread.start()
 
