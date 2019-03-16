@@ -79,12 +79,17 @@ class Ui_Form(object):
     def setParameters_join(self):
         self.s_data.acquire()
         self.s_data.set_name(self.textEdit.toPlainText())
-        self.s_data.set_node_ID(int(self.textEdit_2.toPlainText()))
+        self.s_data.set_creator_ID(int(self.textEdit_2.toPlainText()))
         self.s_data.release()
         print(self.textEdit.toPlainText())
         print(self.textEdit_2.toPlainText())
+
+        orchestrator_obj = ComOrchestrator(self.s_data)
+        com_thread = threading.Thread()
+        com_thread = threading.Thread(name='Com_thread', target=orchestrator_obj.slave_starter)
+        com_thread.start()
         Form.hide()
-        wait_guim = Wait_member()
+        wait_guim = Wait_member(self.s_data)
     
     def setParameters_create(self):
         ##Launching the communication thread here

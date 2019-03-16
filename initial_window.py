@@ -77,6 +77,7 @@ class Ui_Form_2(object):
         self.s_data.set_name(self.textEdit.toPlainText())
         self.s_data.set_node_ID(int(self.textEdit_2.toPlainText()))
         self.s_data.release()
+
         
 
         

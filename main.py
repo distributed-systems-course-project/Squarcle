@@ -16,7 +16,8 @@ orchestrator_obj = ComOrchestrator(data)
 if data.playability:
 	# User can play the game
 
-	# This should be replaced by a function from the GUI
+	# This should be replaced by a2
+	#  function from the GUI
 	choice = input('1 => Start a new game\t 2=> Join a game\n===> ')
 	com_thread = threading.Thread()
 
