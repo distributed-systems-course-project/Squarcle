@@ -22,7 +22,7 @@ class udp_pubsub:
 	Dictionary: {'participant_id': [listening_at, publishing_at]} udp ports
 	'''
 
-	def __init__(self, node_ip, participants, data, master,slave_participants={}):
+	def __init__(self, node_ip, participants, data, master, slave_participants={}):
 		self.node_ip 			 = node_ip
 		self.participants		 = participants
 		self.other_nodes_msgs    = {}
@@ -55,7 +55,11 @@ class udp_pubsub:
 			try:
 				for node_id in self.participants:
 					IP   = self.participants[node_id][-1]
-					PORT = self.participants[node_id][1]
+					if self.master:
+						PORT = self.participants[node_id][2]
+					else: #slave
+						PORT = self.participants[node_id][1]
+
 					print('UDP publisher config: IP:{}, PORT: {}'.format(IP, PORT))
 					self.sock.sendto(MESSAGE, (IP, PORT))
 			finally:
@@ -118,8 +122,10 @@ class udp_pubsub:
 
 					#IP   = self.participants[node_id][-1] # IP of neighbor
 					IP 	 = self.node_ip
-					PORT = self.participants[node_id][2] # Neighbor's publishing port (we listener to the publishing port of the neighbor)
-
+					if self.master:
+						PORT = self.participants[node_id][1] # Neighbor's publishing port (we listener to the publishing port of the neighbor)
+					else:
+						PORT = self.participants[node_id][2]
 					print('UDP subscriber config: IP:{}, PORT: {}'.format(IP, PORT))
 					#print('IP: {}, PORT: {}'.format(IP, PORT))
 					self.sock.bind((IP, PORT))
