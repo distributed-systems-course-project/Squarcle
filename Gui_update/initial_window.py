@@ -9,10 +9,14 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from waitadmin import Wait_admin
 from waitmember import Wait_member
+from squarcle_data import squarcle_data
+import threading
+from ComOrchestrator import ComOrchestrator
 
 class Ui_Form(object):
-    def setupUi(self, Form, test):
-        print(test)
+    s_data = 0
+    def setupUi(self, Form, s_data):
+        self.s_data = s_data
         Form.setObjectName("Form")
         Form.resize(414, 359)
         self.pushButton = QtWidgets.QPushButton(Form)
@@ -73,18 +77,32 @@ class Ui_Form(object):
    
 
     def setParameters_join(self):
-        
+        self.s_data.acquire()
+        self.s_data.set_name(self.textEdit.toPlainText())
+        self.s_data.set_node_ID(int(self.textEdit_2.toPlainText()))
+        self.s_data.release()
         print(self.textEdit.toPlainText())
         print(self.textEdit_2.toPlainText())
         Form.hide()
-        wait_guim=Wait_member()
+        wait_guim = Wait_member()
     
     def setParameters_create(self):
-        
+        ##Launching the communication thread here
+        # Initializing a communication orchestrator object
+        orchestrator_obj = ComOrchestrator(self.s_data)
+        com_thread = threading.Thread()
+
+        self.s_data.acquire()
+        self.s_data.set_name(self.textEdit.toPlainText())
+        self.s_data.release()
+        # This node is a master
+        com_thread = threading.Thread(name='Com_thread', target=orchestrator_obj.master_starter)
+        com_thread.start()
+
         print(self.textEdit.toPlainText())
         
         Form.hide()
-        wait_guia = Wait_admin()
+        wait_guia = Wait_admin(self.s_data)
         
 
 
@@ -106,9 +124,10 @@ class Ui_Form(object):
 
 if __name__ == "__main__":
     import sys
+    s_data = squarcle_data()
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
     ui = Ui_Form()
-    ui.setupUi(Form, 15)
+    ui.setupUi(Form, s_data)
     Form.show()
     sys.exit(app.exec_())

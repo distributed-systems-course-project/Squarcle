@@ -3,8 +3,9 @@ from tkinter import *
 from GUI import Main_Game
 
 class Wait_admin(object):
-    def __init__(self):
-
+    s_data = 0
+    def __init__(self, s_data):
+        self.s_data = s_data
         def close_window():
         	root_2.destroy()
         	maingui=Main_Game()
@@ -28,6 +29,8 @@ class Wait_admin(object):
         self.label_2=Label(root_2,relief="solid",font="Times 14 bold ",textvariable=self.var_2,)
         self.label_2.pack()
         self.label_2.place(bordermode=OUTSIDE, height=50, width=50,x=300,y=300)
-        #number of nodes variable 
-        self.var_2.set(0)
+        #number of nodes variable
+        self.s_data.acquire()
+        self.var_2.set(len(self.s_data.nodes_to_admin))
+        self.s_data.release()
         root_2.mainloop()
