@@ -32,7 +32,7 @@ class squarcle_data:
     SHIFT_Y = 10 ##shift in Y axis from border
     #################################these are the same for all nodes##########################################################
     number_of_nodes = 0 #number of nodes in the game
-    nodes_to_admin = [2,5] # Needed in Admin GUI (list of connected nodes !)
+    nodes_to_admin = [] # Needed in Admin GUI (list of connected nodes !)
     creator_ID = 0
     nodes_centers = [["name", [0,0]]] #this should have information about node ID and center, ['A', (32,4)]
     all_scores = [["name", 0]] #this has the scores of all nodes
@@ -63,7 +63,7 @@ class squarcle_data:
 
     def __init__(self):
         self.lock = threading.Lock()
-        self.nodes_to_admin = [] # needed initialization 
+        self.nodes_to_admin = [] # needed initialization
 
     def release(self):
         self.lock.release()
@@ -85,6 +85,9 @@ class squarcle_data:
         self.number_of_nodes = number_of_nodes
         ##once called, create sequances
 
+    def set_nodes_to_admin(self, node):
+        self.nodes_to_admin.append(node)
+
     def set_name(self, name):
         self.name = name
 
@@ -94,8 +97,6 @@ class squarcle_data:
     def set_creator_ID(self, creator_ID):
         self.creator_ID = creator_ID
 
-    def set_nodes_to_admin(self, nodes_to_admin):
-        self.nodes_to_admin = nodes_to_admin
 
     def set_nodes_centers(self, nodes_centers):
         self.nodes_centers = nodes_centers

@@ -4,8 +4,23 @@ from GUI import Main_Game
 
 class Wait_admin(object):
     s_data = 0
+    x = 0
+    var_2 = 0
     def __init__(self, s_data):
+        # number of nodes
+
+        # number of nodes variable
         self.s_data = s_data
+
+        def refresh_number():
+            self.label_2 = Label(root_2, relief="solid", font="Times 14 bold ", textvariable=self.var_2)
+            self.label_2.pack()
+            self.label_2.place(bordermode=OUTSIDE, height=50, width=50, x=300, y=300)
+            self.s_data.acquire()
+            self.var_2 = StringVar()
+            print(self.s_data.nodes_to_admin)
+            self.var_2.set(len(self.s_data.nodes_to_admin))
+            self.s_data.release()
         def close_window():
         	root_2.destroy()
         	maingui=Main_Game()
@@ -17,20 +32,17 @@ class Wait_admin(object):
         self.Wait_label=Label(root_2,text="Wait Please",relief="solid",font="Times 20 bold " ,width=15,height=4,anchor=N)
         self.Wait_label.pack()
         
-        self.button = Button (root_2, text = "Start",height=10,width=25, command = close_window)
+        self.button = Button (root_2, text = "Start",height=5,width=25, command = close_window)
         self.button.pack()
+
+        self.ref = Button(root_2, text="Refresh", height=5, width=25, command=refresh_number)
+        self.ref.pack()
+
         self.node_label=Label(root_2,text="Joined Nodes:",relief="solid",font="Times 14 bold ")
         self.node_label.pack()
         self.node_label.place(bordermode=OUTSIDE, height=50, width=150,x=100,y=300)
         
         
-        #number of nodes
-        self.var_2=StringVar()       
-        self.label_2=Label(root_2,relief="solid",font="Times 14 bold ",textvariable=self.var_2,)
-        self.label_2.pack()
-        self.label_2.place(bordermode=OUTSIDE, height=50, width=50,x=300,y=300)
-        #number of nodes variable
-        self.s_data.acquire()
-        self.var_2.set(len(self.s_data.nodes_to_admin))
-        self.s_data.release()
+
+
         root_2.mainloop()

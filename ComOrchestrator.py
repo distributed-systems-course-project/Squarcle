@@ -60,7 +60,7 @@ class ComOrchestrator:
 
                 ## Adding connected
                 self.data.acquire()
-                self.data.set_nodes_to_admin(self.data.nodes_to_admin.append(player))
+                self.data.set_nodes_to_admin(player)
                 self.data.release()
 
             answer = input('Are those all the players ?\n1 => yes \t 2 => no\n==> ')
