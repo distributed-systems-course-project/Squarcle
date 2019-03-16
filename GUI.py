@@ -1,11 +1,15 @@
-
+import threading
 import tkinter as tk
 from tkinter import *
 from Gameover import Game_Over
-    
+from ComOrchestrator import  ComOrchestrator
 
 class Main_Game(object):
-    def __init__(self):
+    s_data = 0
+    master = False
+    def __init__(self, s_data, master=False):
+        self.s_data = s_data
+        self.master = master
 
         
 
@@ -125,9 +129,10 @@ class Main_Game(object):
        
         
         #color variable 
-       
+        orchestrator_obj = ComOrchestrator(self.s_data)
 
-
+        com_thread = threading.Thread(name='Com_UDP', target=orchestrator_obj.udp_start, args=(self.master,))
+        com_thread.start()
 
 
 

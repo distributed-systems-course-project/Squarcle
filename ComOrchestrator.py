@@ -106,15 +106,13 @@ class ComOrchestrator:
         participants = self.data.nodes_at_game_start
         self.data.release()
 
-        print("From game starter")
-        print(participants)
-        print("---------------------------------")
         if master:
 
             # Publish start message
-            self.tcp_obj.start_the_game(participants, master=True)
+            self.tcp_obj.start_the_game(participants.copy(), master=True)
 
             self.data.acquire()
+            print('nodes at game start after running start the game func')
             print(self.data.nodes_at_game_start)
             self.data.release()
 

@@ -184,20 +184,31 @@ class Tcp_Initiator:
     '''
     def start_the_game(self, participants, master):
         if master:
+            print('from start the game func')
+            print(self.participants.items())
+            i = 0
+            local_participants = participants.copy()
+            for node_name, neighbor_param in local_participants.items():
+                i+=1
+                print('me9bel')
+                print(participants)
 
-            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                print("neighbor param")
+                print(neighbor_param)
 
-            for node_name, neighbor_param in participants.items():
-                self.sock.connect((neighbor_param[-1], self.tcp_port))
+                ip = neighbor_param[-1]
+                print('li 9alek int')
+                print(ip)
+                self.sock.connect((ip, self.tcp_port))
 
-                message = self.start_msg_builder(participants)
+                message = self.start_msg_builder(participants, ip)
 
                 self.sock.send(message.encode('utf-8'))
-
                 _ = self.sock.recv(self.BUFFER_SIZE)
 
-            self.sock.close()
-
+                self.sock.close()
+            print('i at the end of for loop: {}'.format(i))
         else:
 
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -223,11 +234,13 @@ class Tcp_Initiator:
     Starting msg has the form
     True.node_name.node_id
     '''
-    def start_msg_builder(self, participants):
+    def start_msg_builder(self, participants, ip):
 
         self.data.acquire()
-        self.data.nodes_at_game_start = participants
+        #self.data.nodes_at_game_start = participants
         self.data.number_of_nodes = len(participants)
+        current_node_name = self.data.name
+        current_node_ID   = self.data.node_ID
         self.data.play_from_com = True
         self.data.release()
 
@@ -236,12 +249,28 @@ class Tcp_Initiator:
         # Get all participants' keys
         keys = list(participants.keys())
 
+        to_remove = ''
+        # Removing not needed participant
+        print('before removing')
+        print(participants)
+        for key in keys:
+            if participants[key][-1] == ip:
+                to_remove = key
+
+        del participants[to_remove]
+        del keys[keys.index(to_remove)]
+
+        participants[current_node_name] = [current_node_ID]
+        keys.append(current_node_name)
+        print('participants after removing target')
+        print(participants)
         # Build the msg
         for key in keys:
-            message+= (key + '.')
+            message += (key + '.')
 
-            message+= (str(participants[key][0]) + '.') # node id that corresponds to that key
+            message += (str(participants[key][0]) + '.') # node id that corresponds to that key
 
+        print('Start msg: {}'.format(message[:-1]))
         return message[:-1]
 
 
