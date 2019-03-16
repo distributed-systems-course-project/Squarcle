@@ -55,7 +55,7 @@ class Main_Game(object):
             self.x=self.x
             self.y=self.y+10
             b.create_oval(10,10, 60, 60 ,outline="red", fill="white")
-            if(1):
+            if(0):
                 root.destroy()
                 gameover=Game_Over()
         def up(zero) :
@@ -66,7 +66,7 @@ class Main_Game(object):
             self.x=self.x
             self.y=self.y-10
             b.create_oval(10,10, 60, 60 ,outline="red", fill="white")
-            if(1):
+            if(0):
                 root.destroy()
                 gameover=Game_Over()
         def right(zero) :
@@ -77,7 +77,7 @@ class Main_Game(object):
             self.x=self.x+10
             self.y=self.y
             b.create_oval(10,10, 60, 60 ,outline="red", fill="white")
-            if(1):
+            if(0):
                 root.destroy()
                 gameover=Game_Over()
             
@@ -91,7 +91,7 @@ class Main_Game(object):
             self.x=self.x-10
             self.y=self.y
             b.create_oval(10,10, 60, 60 ,outline="red", fill="white")
-            if(1):
+            if(0):
                 root.destroy()
                 gameover=Game_Over()
 
