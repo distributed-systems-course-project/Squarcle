@@ -57,25 +57,14 @@ class ComOrchestrator:
         self.tcp_obj.tcp_listen() # blocking instruction
 
         for player in self.tcp_obj.get_participants():
-            print('Player "'+ str(player) + '" has joint the game !')
+            print('Player "' + str(player) + '" has joint the game !')
 
         if not self.tcp_obj.get_timeout():
-            ## Adding connected
+            # Adding connected
             self.data.acquire()
             self.data.set_participants(self.tcp_obj.get_participants())
             self.data.set_nodes_to_admin(list(self.tcp_obj.get_participants().keys())[-1])
             self.data.release()
-        '''
-        answer = input('Are those all the players ?\n1 => yes \t 2 => no\n==> ')
-
-        if answer == '1':
-            isAllPlayersIn = True
-            self.tcp_obj.close_tcp_listener() # close listener if still open
-        '''
-        '''
-        for player, udp_ports in self.tcp_obj.get_participants().items():
-            print('Player: {} with ID: {} listening at {}, publishing at {}'.format(player, udp_ports[0], udp_ports[1], udp_ports[2]))
-        '''
 
         # Building finalized participants dictionary {'node_name': [<node_ID>, <l_port>, <pub_port>, <IP>]}
         participants = self.tcp_obj.neighboring_nodes_ips(self.tcp_obj.get_participants())
@@ -85,16 +74,16 @@ class ComOrchestrator:
         self.data.release()
 
     def close_master_tcp_connection(self):
-        self.tcp_obj.close_tcp_listener()
 
+        self.tcp_obj.close_tcp_listener()
 
     def slave_starter(self):
 
         # implement an ID verification !
         self.data.acquire()
         join_id = int(self.data.creator_ID)
-        print("join id: " + str(join_id))
         self.data.release()
+
         self.tcp_obj.tcp_joiner(join_id, self.com_init_obj.get_node_subnet_ip())
         participants = self.tcp_obj.neighboring_nodes_ips(self.tcp_obj.get_participants())
 
@@ -103,10 +92,6 @@ class ComOrchestrator:
         self.data.number_of_nodes	  = len(participants)
         self.data.slave_master 		  = participants
         self.data.release()
-
-        print("Slave's master is:")
-        print(participants)
-
 
     def game_starter(self,master):
 
@@ -120,15 +105,15 @@ class ComOrchestrator:
         self.data.acquire()
         participants = self.data.nodes_at_game_start
         self.data.release()
-        print("ro7 t9awad  men lcom")
+
+        print("From game starter")
+        print(participants)
+        print("---------------------------------")
         if master:
 
             # Publish start message
             self.tcp_obj.start_the_game(participants, master=True)
 
-            print("Participants From ")
-            print(self.tcp_obj.get_participants())
-            print('Participants from Squarcle_data')
             self.data.acquire()
             print(self.data.nodes_at_game_start)
             self.data.release()
@@ -137,10 +122,6 @@ class ComOrchestrator:
 
             self.tcp_obj.start_the_game(participants, master=False)
 
-
-            print("Participants From ")
-            print(self.tcp_obj.get_participants())
-            print('Participants from Squarcle_data')
             self.data.acquire()
             print(self.data.nodes_at_game_start)
             self.data.release()

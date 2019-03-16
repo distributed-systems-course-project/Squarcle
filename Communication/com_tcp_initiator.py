@@ -55,9 +55,10 @@ class Tcp_Initiator:
             self.sock.bind((self.tcp_ip, self.tcp_port))
 
             self.sock.listen(1)
-            self.isTimeOut =  False
+            self.isTimeOut = False
+
             conn, addr = self.sock.accept()
-            while 1:
+            while True:
                 tmp = conn.recv(self.BUFFER_SIZE)
                 if not tmp: break
                 data = str(tmp.decode('ascii')) # data is the neighbor node ID
@@ -172,7 +173,8 @@ class Tcp_Initiator:
 
         udp_ports.insert(0, int(participant[1]))
 
-        participant = { str(participant[0]) :  udp_ports } # participant = {'node_ID': [<node_name>, <udp_L_port>, <udp_P_port>]}
+        # participant = {'node_ID': [<node_name>, <udp_L_port>, <udp_P_port>]}
+        participant = {str(participant[0]):  udp_ports}
 
         return participant
 
@@ -192,15 +194,13 @@ class Tcp_Initiator:
 
                 self.sock.send(message.encode('utf-8'))
 
-                data = self.sock.recv(self.BUFFER_SIZE)
+                _ = self.sock.recv(self.BUFFER_SIZE)
 
             self.sock.close()
 
         else:
-            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            keys = list(participants.keys())
 
-            #TCP_IP = participants[ keys[0] ][-1] # I have Noticed a problem with it
+            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
             self.sock.bind((self.tcp_ip, self.tcp_port))
             self.sock.listen(1)
@@ -212,14 +212,12 @@ class Tcp_Initiator:
                 if not data: break
                 data = data.decode('ascii')
 
-                data = self.extract_start_msg_and_update_data(data)
+                self.extract_start_msg_and_update_data(data)
 
                 msg = "OK"
                 conn.send(msg.encode('utf-8'))  # echo
 
-
             self.sock.close()
-            #self.sock.connect((self.participants[], self.tcp_port))
 
     '''
     Starting msg has the form
@@ -254,7 +252,6 @@ class Tcp_Initiator:
     '''
     def extract_start_msg_and_update_data(self, data):
         data = data.split('.')
-        print("the data that we r looking for is ")
         print(data)
         start_bool = bool(data[0])
         del data[0]

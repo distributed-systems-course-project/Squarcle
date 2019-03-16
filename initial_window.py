@@ -77,6 +77,11 @@ class Ui_Form(object):
    
 
     def setParameters_join(self):
+
+        orchestrator_obj = ComOrchestrator(self.s_data)
+        com_thread = threading.Thread()
+        com_thread = threading.Thread(name='Com_thread', target=orchestrator_obj.slave_starter)
+
         self.s_data.acquire()
         self.s_data.set_name(self.textEdit.toPlainText())
         self.s_data.set_creator_ID(int(self.textEdit_2.toPlainText()))
@@ -84,10 +89,8 @@ class Ui_Form(object):
         print(self.textEdit.toPlainText())
         print(self.textEdit_2.toPlainText())
 
-        orchestrator_obj = ComOrchestrator(self.s_data)
-        com_thread = threading.Thread()
-        com_thread = threading.Thread(name='Com_thread', target=orchestrator_obj.slave_starter)
         com_thread.start()
+
         Form.hide()
         wait_guim = Wait_member(self.s_data)
     
@@ -97,14 +100,18 @@ class Ui_Form(object):
         orchestrator_obj = ComOrchestrator(self.s_data)
         com_thread = threading.Thread()
 
-        self.s_data.acquire()
-        self.s_data.set_name(self.textEdit.toPlainText())
-        self.s_data.release()
         # This node is a master
         com_thread = threading.Thread(name='Com_thread', target=orchestrator_obj.master_starter)
-        com_thread.start()
 
+
+        self.s_data.acquire()
+        self.s_data.set_name(self.textEdit.toPlainText())
+        #self.s_data.set_com_thread(com_thread)
+        self.s_data.release()
         print(self.textEdit.toPlainText())
+
+        #com_thread.start()
+
         
         Form.hide()
         wait_guia = Wait_admin(self.s_data)
