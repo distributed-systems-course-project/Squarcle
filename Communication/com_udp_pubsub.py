@@ -42,7 +42,7 @@ class udp_pubsub:
 	'''
 	def udp_publisher(self):
 		while True:
-			time.sleep(1/100)
+			time.sleep(1/10)
 			MESSAGE = self.message_formulation() # Formulating the write msg to send
 
 			MESSAGE = MESSAGE.encode('utf-8') # encoding the message before sending it
@@ -60,7 +60,7 @@ class udp_pubsub:
 					else: #slave
 						PORT = self.participants[node_id][1]
 
-					print('UDP publisher config: IP:{}, PORT: {}'.format(IP, PORT))
+					print('UDP publisher msg: {}'.format(MESSAGE.decode('ascii')))
 					self.sock.sendto(MESSAGE, (IP, PORT))
 			finally:
 				self.sock.close()
@@ -112,7 +112,7 @@ class udp_pubsub:
 
 	def udp_subscriber(self):
 		while True:
-			time.sleep(1 / 100)
+			time.sleep(1 / 10)
 			self.other_nodes_msgs = {}	# Initializing other_nodes msgs to none
 			try:
 
@@ -126,13 +126,13 @@ class udp_pubsub:
 						PORT = self.participants[node_id][1] # Neighbor's publishing port (we listener to the publishing port of the neighbor)
 					else:
 						PORT = self.participants[node_id][2]
-					print('UDP subscriber config: IP:{}, PORT: {}'.format(IP, PORT))
+					print('UDP subscriber msg:{}'.format())
 					#print('IP: {}, PORT: {}'.format(IP, PORT))
 					self.sock.bind((IP, PORT))
 
 					data, addr = self.sock.recvfrom(1024) # buffer size is 1024 bytes
-					
-					print("received UDP message:", data.decode('ascii'))
+
+					print("received UDP message: {}".format(data.decode('ascii')))
 					# Update the other_nodes_msgs
 					self.data_extraction_from_udp_msg(data.decode('ascii'))
 					# Update shared store
