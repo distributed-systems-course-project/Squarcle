@@ -49,26 +49,29 @@ class ComOrchestrator:
         print(self.com_init_obj.get_node_subnet_ip())
         print(self.com_init_obj.get_can_play())
 
-        isAllPlayersIn = False
-        # Starting the TCP listener (it should be a thread !)
-        while not isAllPlayersIn:
-            # Should be put in a thread !
-            self.tcp_obj.tcp_listen() # blocking instruction
+        # Should be put in a thread !
+        self.data.acquire()
+        self.tcp_obj.set_participants(self.data.participants)
+        self.data.release()
 
-            for player in self.tcp_obj.get_participants():
-                print('Player "'+ str(player) + '" has joint the game !')
+        self.tcp_obj.tcp_listen() # blocking instruction
 
-                ## Adding connected
-                self.data.acquire()
-                self.data.set_nodes_to_admin(player)
-                self.data.release()
+        for player in self.tcp_obj.get_participants():
+            print('Player "'+ str(player) + '" has joint the game !')
 
-            answer = input('Are those all the players ?\n1 => yes \t 2 => no\n==> ')
+        if not self.tcp_obj.get_timeout():
+            ## Adding connected
+            self.data.acquire()
+            self.data.set_participants(self.tcp_obj.get_participants())
+            self.data.set_nodes_to_admin(list(self.tcp_obj.get_participants().keys())[-1])
+            self.data.release()
+        '''
+        answer = input('Are those all the players ?\n1 => yes \t 2 => no\n==> ')
 
-            if answer == '1':
-                isAllPlayersIn = True
-                self.tcp_obj.close_tcp_listener() # close listener if still open
-
+        if answer == '1':
+            isAllPlayersIn = True
+            self.tcp_obj.close_tcp_listener() # close listener if still open
+        '''
         '''
         for player, udp_ports in self.tcp_obj.get_participants().items():
             print('Player: {} with ID: {} listening at {}, publishing at {}'.format(player, udp_ports[0], udp_ports[1], udp_ports[2]))

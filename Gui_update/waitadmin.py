@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import *
 from GUI import Main_Game
-
+from ComOrchestrator import ComOrchestrator
+import threading
 class Wait_admin(object):
     s_data = 0
     x = 0
@@ -13,6 +14,14 @@ class Wait_admin(object):
         self.s_data = s_data
 
         def refresh_number():
+            orchestrator_obj = ComOrchestrator(self.s_data)
+            com_thread = threading.Thread()
+
+            # This node is a master
+            com_thread = threading.Thread(name='Com_thread', target=orchestrator_obj.master_starter)
+            #self.s_data.com_thread.join()
+            com_thread.start()
+            com_thread.join()
             self.label_2 = Label(root_2, relief="solid", font="Times 14 bold ", textvariable=self.var_2)
             self.label_2.pack()
             self.label_2.place(bordermode=OUTSIDE, height=50, width=50, x=300, y=300)
@@ -21,6 +30,7 @@ class Wait_admin(object):
             print(self.s_data.nodes_to_admin)
             self.var_2.set(len(self.s_data.nodes_to_admin))
             self.s_data.release()
+
         def close_window():
         	root_2.destroy()
         	maingui=Main_Game()

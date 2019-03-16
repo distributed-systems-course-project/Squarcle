@@ -11,6 +11,7 @@ class Tcp_Initiator:
 	node_id = 0
 	data = '' # Squarecle data object
 	node_subnet_ip = ''
+	isTimeOut = False
 
 	def __init__(self, tcp_ip, tcp_port, node_id, node_subnet_ip, data):
 		self.tcp_ip = tcp_ip
@@ -20,6 +21,7 @@ class Tcp_Initiator:
 		self.participants = dict()
 		self.node_subnet_ip = node_subnet_ip
 		self.data = data
+		self.isTimeOut = False
 
 
 	'''
@@ -44,15 +46,16 @@ class Tcp_Initiator:
 			udp_port = self.tcp_port + 1
 		else: 				 # There are other participants
 			# The list bellow takes the last participant's udp port nbr and adds 1 to it to initialize udp_port
-			udp_port = self.participants[ list( self.participants.keys())[-1] ][-1] + 1
+			print(self.participants)
+			udp_port = self.participants[ list( self.participants.keys())[-1] ][-2] + 1
 		
 		self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		
+		self.sock.settimeout(10)
 		try:
 			self.sock.bind((self.tcp_ip, self.tcp_port))
 
 			self.sock.listen(1)
-
+			self.isTimeOut =  False
 			conn, addr = self.sock.accept()
 			while 1:
 				tmp = conn.recv(self.BUFFER_SIZE)
@@ -74,6 +77,8 @@ class Tcp_Initiator:
 				to_send = self.tcp_echo_msg(node_name, data[1]) # to send should contain [<node_id>, <node_name>, <udp_listening_port>, <udp_publiishing_port> ]
 
 				conn.send(to_send.encode('utf-8'))  # echo
+		except:
+			self.isTimeOut = True
 		finally:
 			self.sock.close()
 
@@ -122,7 +127,8 @@ class Tcp_Initiator:
 	'''
 	def neighboring_nodes_ips(self, participants):
 		for node_id, udp_ports in participants.items():
-			udp_ports.append( self.node_subnet_ip + '.' +  str(udp_ports[0]) )
+			if not isinstance(udp_ports[-1], str):
+				udp_ports.append( self.node_subnet_ip + '.' +  str(udp_ports[0]) )
 		return participants
 
 	'''
@@ -266,6 +272,11 @@ class Tcp_Initiator:
 
 
 	'''
+	Timeout checker
+	'''
+	def get_timeout(self):
+		return self.isTimeOut
+	'''
 	Needed to close connection socket if something unexpected happened
 	'''
 	def close_tcp_listener(self):
@@ -280,3 +291,9 @@ class Tcp_Initiator:
 	'''
 	def get_participants(self):
 		return self.participants
+
+	'''
+	Setters
+	'''
+	def set_participants(self, participants):
+		self.participants = participants

@@ -34,6 +34,7 @@ class squarcle_data:
     number_of_nodes = 0 #number of nodes in the game
     nodes_to_admin = [] # Needed in Admin GUI (list of connected nodes !)
     creator_ID = 0
+    participants = {}
     nodes_centers = [["name", [0,0]]] #this should have information about node ID and center, ['A', (32,4)]
     all_scores = [["name", 0]] #this has the scores of all nodes
     all_scores_ready = False
@@ -46,6 +47,7 @@ class squarcle_data:
     corners_and_colours_pairs = 0
     next_color_corner_pair = 0
     color_counter = 1
+    com_thread = 0
     ##################################these are specific for one node##########################################################
     node_ID = 0 ##this will be used for voting purposes to choose admin, and also it is the first position of a node in the game
     name = "name" ## this has node name, any identifier is fine
@@ -64,6 +66,9 @@ class squarcle_data:
     def __init__(self):
         self.lock = threading.Lock()
         self.nodes_to_admin = [] # needed initialization
+
+    def set_com_thread(self, th):
+        self.com_thread = th
 
     def release(self):
         self.lock.release()
@@ -87,6 +92,9 @@ class squarcle_data:
 
     def set_nodes_to_admin(self, node):
         self.nodes_to_admin.append(node)
+
+    def set_participants(self, participants):
+        self.participants = participants
 
     def set_name(self, name):
         self.name = name
