@@ -1,5 +1,6 @@
 # Communication publisher class
 import socket
+import time
 
 class udp_pubsub:
 
@@ -41,6 +42,7 @@ class udp_pubsub:
 	'''
 	def udp_publisher(self):
 		while True:
+			time.sleep(1/100)
 			MESSAGE = self.message_formulation() # Formulating the write msg to send
 
 			MESSAGE = MESSAGE.encode('utf-8') # encoding the message before sending it
@@ -54,6 +56,7 @@ class udp_pubsub:
 				for node_id in self.participants:
 					IP   = self.participants[node_id][-1]
 					PORT = self.participants[node_id][1]
+					print('UDP publisher config: IP:{}, PORT: {}'.format(IP, PORT))
 					self.sock.sendto(MESSAGE, (IP, PORT))
 			finally:
 				self.sock.close()
@@ -105,29 +108,34 @@ class udp_pubsub:
 
 	def udp_subscriber(self):
 		while True:
+			time.sleep(1 / 100)
 			self.other_nodes_msgs = {}	# Initializing other_nodes msgs to none
-
-			self.sock = socket.socket(socket.AF_INET, # Internet
-			                     socket.SOCK_DGRAM) # UDP
-
 			try:
 
 				for node_id in self.participants:
+					self.sock = socket.socket(socket.AF_INET,  # Internet
+											  socket.SOCK_DGRAM)  # UDP
+
 					#IP   = self.participants[node_id][-1] # IP of neighbor
 					IP 	 = self.node_ip
 					PORT = self.participants[node_id][2] # Neighbor's publishing port (we listener to the publishing port of the neighbor)
-					
+
+					print('UDP subscriber config: IP:{}, PORT: {}'.format(IP, PORT))
 					#print('IP: {}, PORT: {}'.format(IP, PORT))
 					self.sock.bind((IP, PORT))
 
 					data, addr = self.sock.recvfrom(1024) # buffer size is 1024 bytes
 					
-					#print("received message:", data.decode('ascii'))
+					print("received UDP message:", data.decode('ascii'))
 					# Update the other_nodes_msgs
 					self.data_extraction_from_udp_msg(data.decode('ascii'))
 					# Update shared store
 					self.update_squarcle_data()
-					
+
+					self.sock.close()
+			except Exception as e:
+				print('Problem with UDP')
+				print(e.with_traceback())
 			finally:
 				self.sock.close()
 

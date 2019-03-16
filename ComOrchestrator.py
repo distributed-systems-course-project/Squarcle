@@ -125,12 +125,17 @@ class ComOrchestrator:
             self.data.release()
 
     def udp_start(self, master):
+        print('UDP called !')
+
+        self.data.acquire()
+        participants =  self.data.nodes_at_game_start
+        self.data.release()
 
         if master:
             # Master
             #Initialization of udp_pubsub object
             udp_pubsub = com_udp_pubsub.udp_pubsub( self.com_init_obj.get_node_ip(),
-                                                    self.tcp_obj.get_participants(),
+                                                    participants,
                                                     self.data,
                                                     True) # Master mode = True
 

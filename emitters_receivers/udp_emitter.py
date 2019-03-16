@@ -2,7 +2,7 @@ import socket
 import sys
 
 UDP_IP = "192.168.1.106"
-UDP_PORT = int(sys.argv[1])
+UDP_PORT = 25002#int(sys.argv[1])
 MESSAGE = '.'.join(['mokhtar' , '100', '200' , '1500'])
 
 print("UDP target IP:", UDP_IP)
