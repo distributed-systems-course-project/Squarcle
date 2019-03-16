@@ -3,297 +3,299 @@ import socket 		# To manage sockets
 
 class Tcp_Initiator:
 
-	tcp_ip = 0
-	tcp_port = 0
-	participants = {}		# Dictionary: {'participant_id': [listening_at, publishing_at]} udp ports
-	BUFFER_SIZE = 1024
-	sock = '' # Socket
-	node_id = 0
-	data = '' # Squarecle data object
-	node_subnet_ip = ''
-	isTimeOut = False
+    tcp_ip = 0
+    tcp_port = 0
+    participants = {}		# Dictionary: {'participant_id': [listening_at, publishing_at]} udp ports
+    BUFFER_SIZE = 1024
+    sock = '' # Socket
+    node_id = 0
+    data = '' # Squarecle data object
+    node_subnet_ip = ''
+    isTimeOut = False
 
-	def __init__(self, tcp_ip, tcp_port, node_id, node_subnet_ip, data):
-		self.tcp_ip = tcp_ip
-		self.tcp_port = tcp_port
-		self.node_id = node_id
-		self.BUFFER_SIZE = 1024
-		self.participants = dict()
-		self.node_subnet_ip = node_subnet_ip
-		self.data = data
-		self.isTimeOut = False
-
-
-	'''
-	tcp_connect function
-	Arguments:
-		TCP_IP: (string) server's tcp_ip address to be used
-		TCP_PORT: (integer) server's tcp open port
-		MESSAGE: (string) Message to send to the server
-	return
-		data: (binary string) server reply message to our sent message
-	Note that tcp_connection initializes the tcp_ip connection of  the client to the server
-	the message in encoded into binary string so that it can be sent
-	'''
-	def tcp_listen(self):
-		data = ""
-		
-		self.data.acquire()
-		node_name = self.data.name
-		self.data.release()
-
-		if not self.participants:  # No participants yet !
-			udp_port = self.tcp_port + 1
-		else: 				 # There are other participants
-			# The list bellow takes the last participant's udp port nbr and adds 1 to it to initialize udp_port
-			print(self.participants)
-			udp_port = self.participants[ list( self.participants.keys())[-1] ][-2] + 1
-		
-		self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.sock.settimeout(10)
-		try:
-			self.sock.bind((self.tcp_ip, self.tcp_port))
-
-			self.sock.listen(1)
-			self.isTimeOut =  False
-			conn, addr = self.sock.accept()
-			while 1:
-				tmp = conn.recv(self.BUFFER_SIZE)
-				if not tmp: break
-				data = str(tmp.decode('ascii')) # data is the neighbor node ID
-				
-				data = self.first_msg_interpreter(data) # return a list [node_name, node_id]
-				print(data)
-				# Generate 2 free udp port nbr
-				self.participants[data[1]] = [] # Keys of the dictionary are the IDs!
-				self.participants[data[1]].append(int(data[0])) # name of the node
-
-				for i in range(2):
-					while(not self.checkPort(udp_port)):
-						udp_port+=1
-					self.participants[data[1]].append(udp_port)
-					udp_port+=1
-
-				to_send = self.tcp_echo_msg(node_name, data[1]) # to send should contain [<node_id>, <node_name>, <udp_listening_port>, <udp_publiishing_port> ]
-
-				conn.send(to_send.encode('utf-8'))  # echo
-		except:
-			self.isTimeOut = True
-		finally:
-			self.sock.close()
+    def __init__(self, tcp_ip, tcp_port, node_id, node_subnet_ip, data):
+        self.tcp_ip = tcp_ip
+        self.tcp_port = tcp_port
+        self.node_id = node_id
+        self.BUFFER_SIZE = 1024
+        self.participants = dict()
+        self.node_subnet_ip = node_subnet_ip
+        self.data = data
+        self.isTimeOut = False
 
 
-	'''
-	first_msg_interpreter take the first received tcp msg
-	if should have the form name.node_id 
-	Retruns: a list of strings of the form: [<node_name>, <node ID>]
-	'''
-	def first_msg_interpreter(self, data):
-		return data.split('.')
+    '''
+    tcp_connect function
+    Arguments:
+        TCP_IP: (string) server's tcp_ip address to be used
+        TCP_PORT: (integer) server's tcp open port
+        MESSAGE: (string) Message to send to the server
+    return
+        data: (binary string) server reply message to our sent message
+    Note that tcp_connection initializes the tcp_ip connection of  the client to the server
+    the message in encoded into binary string so that it can be sent
+    '''
+    def tcp_listen(self):
+        data = ""
 
-	'''
-	Function used to check port availability
-	Input:
-		port: integer => port number to check
-	Return:
-		result: boolean => True if port is not in use; false otherwise
-	'''
-	def checkPort(self, port):
-	    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	    result = False
-	    try:
-	        sock.bind(("0.0.0.0", port))
-	        result = True
-	    except:
-	        result = False
-	    sock.close()
-	    return result
+        self.data.acquire()
+        node_name = self.data.name
+        self.data.release()
 
-	'''
-	Function to generate TCP/IP communication playback message
-	returns a string
-	'''
-	def tcp_echo_msg(self, current_node_name,neighbor_id):
-		msg_struct = [str(current_node_name), str(self.node_id), str(self.participants[neighbor_id][1]), str(self.participants[neighbor_id][2])]
-		print('strcut msg')
-		print(msg_struct)
-		return '.'.join(msg_struct)
+        if not self.participants:  # No participants yet !
+            udp_port = self.tcp_port + 1
+        else: 				 # There are other participants
+            # The list bellow takes the last participant's udp port nbr and adds 1 to it to initialize udp_port
+            print(self.participants)
+            udp_port = self.participants[ list( self.participants.keys())[-1] ][-2] + 1
 
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.settimeout(10)
+        try:
+            self.sock.bind((self.tcp_ip, self.tcp_port))
 
-	'''
-	neighboring nodes ips function uses provided subnet to formulate
-	IP addresses of other discovered nodes.
-	The results are stores in the global variable participants
-	'''
-	def neighboring_nodes_ips(self, participants):
-		for node_id, udp_ports in participants.items():
-			if not isinstance(udp_ports[-1], str):
-				udp_ports.append( self.node_subnet_ip + '.' +  str(udp_ports[0]) )
-		return participants
+            self.sock.listen(1)
+            self.isTimeOut =  False
+            conn, addr = self.sock.accept()
+            while 1:
+                tmp = conn.recv(self.BUFFER_SIZE)
+                if not tmp: break
+                data = str(tmp.decode('ascii')) # data is the neighbor node ID
 
-	'''
-	Used when user needs to join a game !
-	'''
-	def tcp_joiner(self, neighbor_node_nbr, node_subnet):
-		neighbor_ip = node_subnet + '.' + str(neighbor_node_nbr)
+                data = self.first_msg_interpreter(data) # return a list [node_name, node_id]
+                print(data)
+                # Generate 2 free udp port nbr
+                self.participants[data[1]] = [] # Keys of the dictionary are the IDs!
+                self.participants[data[1]].append(int(data[0])) # name of the node
 
-		self.data.acquire()
-		node_name = self.data.name
-		self.data.release()
+                for i in range(2):
+                    while(not self.checkPort(udp_port)):
+                        udp_port+=1
+                    self.participants[data[1]].append(udp_port)
+                    udp_port+=1
 
-		self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		
-		self.sock.connect((neighbor_ip, self.tcp_port))
+                to_send = self.tcp_echo_msg(node_name, data[1]) # to send should contain [<node_id>, <node_name>, <udp_listening_port>, <udp_publiishing_port> ]
 
-		to_send = str(self.node_id) + '.' + node_name		# Initial joining TCP msg has the form node_name.node_id
-
-		try:
-			self.sock.sendall(to_send.encode('utf-8'))
-
-			while True:
-				data = self.sock.recv(self.BUFFER_SIZE) # node_id.node_name.udp_l_port.udp_p_port
-				if data: break
-
-			self.participants = self.extract_master_msg(data)	# master is stored here
-			
-		finally:
-			self.sock.close()
+                conn.send(to_send.encode('utf-8'))  # echo
+        except:
+            self.isTimeOut = True
+        finally:
+            self.sock.close()
 
 
-	'''
-	extract_master_msg encapsulate the message received from the 
-	'''
-	def extract_master_msg(self, data):
-		data = data.decode('ascii')
-		
-		participant = data.split('.') # [node_id, node_name, l_port, pub_port]
+    '''
+    first_msg_interpreter take the first received tcp msg
+    if should have the form name.node_id 
+    Retruns: a list of strings of the form: [<node_name>, <node ID>]
+    '''
+    def first_msg_interpreter(self, data):
+        return data.split('.')
 
-		udp_ports = list(map(int, participant[2:]))
+    '''
+    Function used to check port availability
+    Input:
+        port: integer => port number to check
+    Return:
+        result: boolean => True if port is not in use; false otherwise
+    '''
+    def checkPort(self, port):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        result = False
+        try:
+            sock.bind(("0.0.0.0", port))
+            result = True
+        except:
+            result = False
+        sock.close()
+        return result
 
-		udp_ports.insert(0, int(participant[1]))
-
-		participant = { str(participant[0]) :  udp_ports } # participant = {'node_ID': [<node_name>, <udp_L_port>, <udp_P_port>]}
-		
-		return participant
-
-	
-	'''
-	Start the game
-	'''
-	def start_the_game(self, participants, master):
-		if master:
-
-			self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		
-			for node_name, neighbor_param in participants.items():
-				self.sock.connect((neighbor_param[-1], self.tcp_port))
-
-				message = self.start_msg_builder(participants)
-
-				self.sock.send(message.encode('utf-8'))
-
-				data = self.sock.recv(self.BUFFER_SIZE)
-
-			self.sock.close()			
-
-		else:
-			self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-			keys = list(participants.keys())
-
-			#TCP_IP = participants[ keys[0] ][-1] # I have Noticed a problem with it
-
-			self.sock.bind((self.tcp_ip, self.tcp_port))
-			self.sock.listen(1)
-
-			conn, addr = self.sock.accept()
-
-			while 1:
-				data = conn.recv(self.BUFFER_SIZE)
-				if not data: break
-				data = data.decode('ascii')
-
-				data = self.extract_start_msg_and_update_data(data)
-				
-				msg = "OK"
-				conn.send(msg.encode('utf-8'))  # echo
+    '''
+    Function to generate TCP/IP communication playback message
+    returns a string
+    '''
+    def tcp_echo_msg(self, current_node_name,neighbor_id):
+        msg_struct = [str(current_node_name), str(self.node_id), str(self.participants[neighbor_id][1]), str(self.participants[neighbor_id][2])]
+        print('strcut msg')
+        print(msg_struct)
+        return '.'.join(msg_struct)
 
 
-			self.sock.close()
-			#self.sock.connect((self.participants[], self.tcp_port))
+    '''
+    neighboring nodes ips function uses provided subnet to formulate
+    IP addresses of other discovered nodes.
+    The results are stores in the global variable participants
+    '''
+    def neighboring_nodes_ips(self, participants):
+        for node_id, udp_ports in participants.items():
+            if not isinstance(udp_ports[-1], str):
+                udp_ports.append( self.node_subnet_ip + '.' +  str(udp_ports[0]) )
+        return participants
 
-	'''
-	Starting msg has the form
-	True.node_name.node_id
-	'''
-	def start_msg_builder(self, participants):
-		
-		self.data.acquire()
-		self.data.nodes_at_game_start = participants
-		self.data.number_of_nodes = len(participants)
-		self.data.play_from_com = True
-		self.data.release()
+    '''
+    Used when user needs to join a game !
+    '''
+    def tcp_joiner(self, neighbor_node_nbr, node_subnet):
+        neighbor_ip = node_subnet + '.' + str(neighbor_node_nbr)
 
-		message = 'True.'
+        self.data.acquire()
+        node_name = self.data.name
+        self.data.release()
 
-		# Get all participants' keys
-		keys = list(participants.keys())
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-		# Build the msg
-		for key in keys:
-			message+= (key + '.')	
+        self.sock.connect((neighbor_ip, self.tcp_port))
 
-			message+= (str(participants[key][0]) + '.') # node id that corresponds to that key
+        to_send = str(self.node_id) + '.' + node_name		# Initial joining TCP msg has the form node_name.node_id
 
-		return message[:-1]
+        try:
+            self.sock.sendall(to_send.encode('utf-8'))
 
+            while True:
+                data = self.sock.recv(self.BUFFER_SIZE) # node_id.node_name.udp_l_port.udp_p_port
+                if data: break
 
-	'''
-	Start message extractor
-	data should have the form
-	True.node_name1.node_id1.node_name2.node_id2.......
-	'''
-	def extract_start_msg_and_update_data(self, data):
-		data = data.split('.')
-		start_bool = bool(data[0])
-		del data[0]
-		participants = {}
-		
-		print(data)
+            self.participants = self.extract_master_msg(data)	# master is stored here
 
-		for i in range(0, len(data), 2):
-			participants[data[i]] = [int(data[i+1])]
-
-		self.data.acquire()
-		self.data.nodes_at_game_start = participants
-		self.data.number_of_nodes = len(participants)
-		self.data.play_from_com = start_bool
-		self.data.release()
-		self.participants = participants
+        finally:
+            self.sock.close()
 
 
-	'''
-	Timeout checker
-	'''
-	def get_timeout(self):
-		return self.isTimeOut
-	'''
-	Needed to close connection socket if something unexpected happened
-	'''
-	def close_tcp_listener(self):
-		try:
-			self.sock.close()
-		except:
-			pass
-		return
+    '''
+    extract_master_msg encapsulate the message received from the 
+    '''
+    def extract_master_msg(self, data):
+        data = data.decode('ascii')
 
-	'''
-	getters
-	'''
-	def get_participants(self):
-		return self.participants
+        participant = data.split('.') # [node_id, node_name, l_port, pub_port]
 
-	'''
-	Setters
-	'''
-	def set_participants(self, participants):
-		self.participants = participants
+        udp_ports = list(map(int, participant[2:]))
+
+        udp_ports.insert(0, int(participant[1]))
+
+        participant = { str(participant[0]) :  udp_ports } # participant = {'node_ID': [<node_name>, <udp_L_port>, <udp_P_port>]}
+
+        return participant
+
+
+    '''
+    Start the game
+    '''
+    def start_the_game(self, participants, master):
+        if master:
+
+            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+            for node_name, neighbor_param in participants.items():
+                self.sock.connect((neighbor_param[-1], self.tcp_port))
+
+                message = self.start_msg_builder(participants)
+
+                self.sock.send(message.encode('utf-8'))
+
+                data = self.sock.recv(self.BUFFER_SIZE)
+
+            self.sock.close()
+
+        else:
+            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            keys = list(participants.keys())
+
+            #TCP_IP = participants[ keys[0] ][-1] # I have Noticed a problem with it
+
+            self.sock.bind((self.tcp_ip, self.tcp_port))
+            self.sock.listen(1)
+
+            conn, addr = self.sock.accept()
+
+            while 1:
+                data = conn.recv(self.BUFFER_SIZE)
+                if not data: break
+                data = data.decode('ascii')
+
+                data = self.extract_start_msg_and_update_data(data)
+
+                msg = "OK"
+                conn.send(msg.encode('utf-8'))  # echo
+
+
+            self.sock.close()
+            #self.sock.connect((self.participants[], self.tcp_port))
+
+    '''
+    Starting msg has the form
+    True.node_name.node_id
+    '''
+    def start_msg_builder(self, participants):
+
+        self.data.acquire()
+        self.data.nodes_at_game_start = participants
+        self.data.number_of_nodes = len(participants)
+        self.data.play_from_com = True
+        self.data.release()
+
+        message = 'True.'
+
+        # Get all participants' keys
+        keys = list(participants.keys())
+
+        # Build the msg
+        for key in keys:
+            message+= (key + '.')
+
+            message+= (str(participants[key][0]) + '.') # node id that corresponds to that key
+
+        return message[:-1]
+
+
+    '''
+    Start message extractor
+    data should have the form
+    True.node_name1.node_id1.node_name2.node_id2.......
+    '''
+    def extract_start_msg_and_update_data(self, data):
+        data = data.split('.')
+        print("the data that we r looking for is ")
+        print(data)
+        start_bool = bool(data[0])
+        del data[0]
+        participants = {}
+
+        print(data)
+
+        for i in range(0, len(data), 2):
+            participants[data[i]] = [int(data[i+1])]
+
+        self.data.acquire()
+        self.data.nodes_at_game_start = participants
+        self.data.number_of_nodes = len(participants)
+        self.data.play_from_com = start_bool
+        self.data.release()
+        self.participants = participants
+
+
+    '''
+    Timeout checker
+    '''
+    def get_timeout(self):
+        return self.isTimeOut
+    '''
+    Needed to close connection socket if something unexpected happened
+    '''
+    def close_tcp_listener(self):
+        try:
+            self.sock.close()
+        except:
+            pass
+        return
+
+    '''
+    getters
+    '''
+    def get_participants(self):
+        return self.participants
+
+    '''
+    Setters
+    '''
+    def set_participants(self, participants):
+        self.participants = participants

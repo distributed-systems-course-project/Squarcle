@@ -120,7 +120,7 @@ class ComOrchestrator:
         self.data.acquire()
         participants = self.data.nodes_at_game_start
         self.data.release()
-
+        print("ro7 t9awad  men lcom")
         if master:
 
             # Publish start message

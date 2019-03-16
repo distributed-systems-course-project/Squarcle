@@ -76,7 +76,8 @@ class squarcle_data:
 
     def acquire(self):
         self.lock.acquire()
-
+    def set_play_from_com(self):
+        self.play_from_com = True
     def set_parameters(self, number_of_nodes, node_ID):
         self.number_of_nodes = number_of_nodes
         self.node_ID = node_ID
