@@ -32,8 +32,11 @@ class Wait_admin(object):
             self.s_data.release()
 
         def close_window():
-        	root_2.destroy()
-        	maingui=Main_Game()
+            orchestrator_obj = ComOrchestrator(self.s_data)
+            com_thread = threading.Thread(name='Com_game_start', target=orchestrator_obj.game_starter, args=(True,))
+            com_thread.start()
+            root_2.destroy()
+            maingui=Main_Game()
 
         root_2 =Tk()
 
