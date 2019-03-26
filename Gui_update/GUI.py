@@ -1,6 +1,9 @@
+import threading
 import time
 import tkinter as tk
 from tkinter import *
+
+from ComOrchestrator import ComOrchestrator
 from Gameover import Game_Over
 from squarcle_data import  squarcle_data
     
@@ -171,7 +174,11 @@ class Main_Game(object):
        
         
         #color variable 
-       
+
+        orchestrator_obj = ComOrchestrator(self.s_data)
+
+        com_thread = threading.Thread(name='Com_UDP', target=orchestrator_obj.udp_start, args=(self.master,))
+        com_thread.start()
 
 
 
