@@ -26,8 +26,8 @@ class Wait_member(object):
             self.s_data.acquire()
             if self.s_data.play_from_com:
                 print("ro7 t9awad men hna")
-                maingui = Main_Game(self.s_data, False)
                 self.s_data.release()
+                maingui = Main_Game(self.s_data, False)
                 root_1.destroy()
             else:
                 self.s_data.release()

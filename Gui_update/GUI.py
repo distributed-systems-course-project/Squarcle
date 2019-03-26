@@ -29,8 +29,9 @@ class Main_Game(object):
         b=  Canvas(root,width=70,height=70,bg='black')
 
         xx = False
-        print("mazal majit")
+        print("mazal majit hna")
         while not xx:
+            print("before acquired")
             self.s_data.acquire()
             print("acquired")
             xx = self.s_data.play_from_com
