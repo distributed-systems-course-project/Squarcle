@@ -238,9 +238,9 @@ class Tcp_Initiator:
 
         self.data.acquire()
         #self.data.nodes_at_game_start = participants
-        self.data.number_of_nodes = len(participants)
         current_node_name = self.data.name
         current_node_ID   = self.data.node_ID
+        self.data.set_parameters(len(participants), self.node_id)
         self.data.play_from_com = True
         self.data.release()
 
@@ -293,7 +293,7 @@ class Tcp_Initiator:
 
         self.data.acquire()
         self.data.nodes_at_game_start = participants
-        self.data.number_of_nodes = len(participants)
+        self.data.set_parameters(len(participants), self.node_id)
         self.data.play_from_com = start_bool
         self.data.release()
         self.participants = participants
