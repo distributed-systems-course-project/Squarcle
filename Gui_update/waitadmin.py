@@ -36,7 +36,7 @@ class Wait_admin(object):
             com_thread = threading.Thread(name='Com_game_start', target=orchestrator_obj.game_starter, args=(True,))
             com_thread.start()
             root_2.destroy()
-            maingui=Main_Game()
+            maingui = Main_Game(self.s_data, True)
 
         root_2 =Tk()
 

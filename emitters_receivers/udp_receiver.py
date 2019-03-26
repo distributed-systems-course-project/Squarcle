@@ -1,8 +1,8 @@
 import socket
 import sys
 
-UDP_IP = "192.168.1.108"
-UDP_PORT = 25001#int(sys.argv[1])
+UDP_IP = "192.168.1.105"
+UDP_PORT = 25002#int(sys.argv[1])
 
 sock = socket.socket(socket.AF_INET, # Internet
                      socket.SOCK_DGRAM) # UDP

@@ -79,13 +79,13 @@ class squarcle_data:
     def set_play_from_com(self):
         self.play_from_com = True
     def set_parameters(self, number_of_nodes, node_ID):
-        self.number_of_nodes = number_of_nodes
+        self.number_of_nodes = number_of_nodes + 2
         self.node_ID = node_ID
         self.all_scores = [0] * number_of_nodes
         self.randomize_corners()
         self.generate_colors()
         self.corners_and_colours_pairs = [self.corners, self.colours]
-        self.next_color_corner_pair = [self.corners_and_colours_pairs[0][0],self.corners_and_colours_pairs[1][0]]
+        self.next_color_corner_pair = [self.corners_and_colours_pairs[0][1],self.corners_and_colours_pairs[1][1]]
 
     def set_number_of_nodes(self, number_of_nodes):
         self.number_of_nodes = number_of_nodes
@@ -133,10 +133,9 @@ class squarcle_data:
         else:
             self.lost = True
             self.score = 0
+
     def set_score(self):
-        self.score = self.color_counter * 100
-        print(self.score)
-        self.all_scores[self.node_ID] = self.score
+        self.score = self.color_counter * (100 + random.randint(10, 20))
     def set_node_center(self, node_center):
         self.node_center = node_center
         self.check_distance_with_nodes()
