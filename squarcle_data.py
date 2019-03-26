@@ -81,7 +81,7 @@ class squarcle_data:
     def set_parameters(self, number_of_nodes, node_ID):
         self.number_of_nodes = number_of_nodes + 2
         self.node_ID = node_ID
-        self.all_scores = [0] * number_of_nodes
+        self.all_scores = [["Boutefssssssssss", 0]] * number_of_nodes
         self.randomize_corners()
         self.generate_colors()
         self.corners_and_colours_pairs = [self.corners, self.colours]
