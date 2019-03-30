@@ -94,12 +94,11 @@ class udp_pubsub:
                             str(nodes_centers[i][1][0]) + '.' +  # cx
                             str(nodes_centers[i][1][1]) + '.' +  # cy
                             str(all_score[i][1]) + '.')  # score
-        else:
             # starting by current node information
-            message = (current_node_name + '.' +  # node_name.
-                       str(current_node_location[0]) + '.' +  # cx
-                       str(current_node_location[1]) + '.' +  # cy.
-                       str(current_node_score) + '.')
+        message = (current_node_name + '.' +  # node_name.
+                   str(current_node_location[0]) + '.' +  # cx
+                   str(current_node_location[1]) + '.' +  # cy.
+                   str(current_node_score) + '.')
 
         return message[:-1]  # removing last '.'
 

@@ -50,6 +50,7 @@ class squarcle_data:
     com_thread = 0
     ##################################these are specific for one node##########################################################
     node_ID = 0 ##this will be used for voting purposes to choose admin, and also it is the first position of a node in the game
+    node_index = 0
     name = "name" ## this has node name, any identifier is fine
     play = False #updated when game is to start, with the communication thread
     play_from_com = False
@@ -121,6 +122,21 @@ class squarcle_data:
         #self.all_scores[self.node_ID] = self.score
         self.rank_scores()
         self.all_scores_ready = True
+    def find_nearest_score(self):
+        dist = 0
+        ind = 0
+        newList = []
+        for i in range(0, len(self.all_scores)):
+            newList.append(self.all_scores[i][1])
+        sorted_score = sorted(newList)
+        for i in range(0, len(sorted_score)):
+            tmp = abs(sorted_score[i] - self.score)
+            if tmp > dist:
+                dist= tmp
+                ind = i
+        self.node_index = ind + 1
+
+
     def set_play(self, play):
         self.play = play
         self.starting_time = time.time()
@@ -128,6 +144,7 @@ class squarcle_data:
 
     def set_end(self, end):
         self.end = end
+        self.find_nearest_score()
         if self.color_counter == (self.number_of_nodes - 1):
             self.lost = False
         else:
@@ -156,11 +173,8 @@ class squarcle_data:
         self.corners = corners
 
     def check_distance_with_nodes(self):
-        for j in self.nodes_centers:
-            dist = pow(j[1][0] - self.node_center[0], 2) + pow(j[1][1] - self.node_center[1], 2)
-            if dist < self.THRESHOLD and j[0] != self.name:
-                print("A collision has occured")
-                self.set_collision(j)
+        #done with corners
+        pass
 
     def check_distance_with_corners(self):
         if not self.end:
@@ -195,6 +209,7 @@ class squarcle_data:
             self.colours.append(x)
 
     def rank_scores(self):
+        #done inside all_scores
         pass
 
 

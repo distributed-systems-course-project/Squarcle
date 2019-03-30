@@ -7,8 +7,8 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from waitadmin import Wait_admin
-from waitmember import Wait_member
+from Gui_update.waitadmin import Wait_admin
+from Gui_update.waitmember import Wait_member
 from squarcle_data import squarcle_data
 import threading
 from ComOrchestrator import ComOrchestrator
