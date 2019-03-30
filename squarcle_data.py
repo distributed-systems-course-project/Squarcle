@@ -145,11 +145,6 @@ class squarcle_data:
     def set_end(self, end):
         self.end = end
         self.find_nearest_score()
-        if self.color_counter == (self.number_of_nodes - 1):
-            self.lost = False
-        else:
-            self.lost = True
-            self.score = 0
 
     def set_score(self):
         self.score = self.color_counter * (100 + random.randint(10, 20))

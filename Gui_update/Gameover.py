@@ -13,7 +13,7 @@ class Game_Over(object):
 
         root_3.geometry('600x600')
 
-        self.over_label=Label(root_3,text="Mission accomplished !",relief="solid",font="Times 32 bold " ,width=15,height=4,anchor=CENTER)
+        self.over_label=Label(root_3,text="Mission accomplished !",relief="solid",font="Times 22 bold " ,width=15,height=4,anchor=CENTER)
         self.over_label.pack()
         self.ranking_label=Label(root_2,text="Your Ranking is:",relief="solid",font="Times 14 bold ")
         self.ranking_label.pack()
