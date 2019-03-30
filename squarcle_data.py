@@ -118,7 +118,7 @@ class squarcle_data:
 
     def set_all_scores(self, all_scores):
         self.all_scores = all_scores
-        self.all_scores[self.node_ID] = self.score
+        #self.all_scores[self.node_ID] = self.score
         self.rank_scores()
         self.all_scores_ready = True
     def set_play(self, play):
@@ -192,14 +192,9 @@ class squarcle_data:
             for i in range(0,6):
                 x = x + c[random.randint(0,15)]
             self.colours.append(x)
+
     def rank_scores(self):
-        for j in range(0, self.number_of_nodes):
-            for i in range(0, self.number_of_nodes):
-                if i!=j:
-                    if self.all_scores[1][i] < self.all_scores[1][j]:
-                        temp = self.all_scores[j]
-                        self.all_scores[j] = self.all_scores[i]
-                        self.all_scores[i] = temp
+        pass
 
 
 

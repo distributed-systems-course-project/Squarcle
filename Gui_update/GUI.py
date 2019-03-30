@@ -4,7 +4,7 @@ import tkinter as tk
 from tkinter import *
 
 from ComOrchestrator import ComOrchestrator
-from Gameover import Game_Over
+from Gui_update.Gameover import Game_Over
 from squarcle_data import  squarcle_data
     
 

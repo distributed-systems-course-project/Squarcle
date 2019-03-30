@@ -3,8 +3,9 @@ from tkinter import *
 
 
 class Game_Over(object):
-    def __init__(self):
-
+    s_data = 0
+    def __init__(self, s_data):
+        self.s_data = s_data
         root_3 = Tk()
 
         root_3.geometry('600x600')

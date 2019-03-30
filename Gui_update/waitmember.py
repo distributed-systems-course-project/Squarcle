@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import *
-from GUI import Main_Game
+from Gui_update.GUI import Main_Game
 import time
 import threading
 from squarcle_data import  squarcle_data

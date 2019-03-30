@@ -123,7 +123,7 @@ class udp_pubsub:
                             1]  # Neighbor's publishing port (we listener to the publishing port of the neighbor)
                     else:
                         PORT = self.participants[node_id][2]
-                    print('UDP subscriber msg:{}'.format())
+                    #print('UDP subscriber msg:{}'.format())
                     # print('IP: {}, PORT: {}'.format(IP, PORT))
                     self.sock.bind((IP, PORT))
 
