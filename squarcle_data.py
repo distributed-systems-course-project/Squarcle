@@ -159,6 +159,7 @@ class squarcle_data:
         for j in self.nodes_centers:
             dist = pow(j[1][0] - self.node_center[0], 2) + pow(j[1][1] - self.node_center[1], 2)
             if dist < self.THRESHOLD and j[0] != self.name:
+                print("A collision has occured")
                 self.set_collision(j)
 
     def check_distance_with_corners(self):

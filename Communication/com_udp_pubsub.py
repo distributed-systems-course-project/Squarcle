@@ -53,18 +53,19 @@ class udp_pubsub:
             self.sock = socket.socket(socket.AF_INET,  # Internet
                                       socket.SOCK_DGRAM)  # UDP
             # print('participants: {}'.format(len(self.participants)))
-            try:
-                for node_id in self.participants:
-                    IP = self.participants[node_id][-1]
-                    if self.master:
-                        PORT = self.participants[node_id][2]
-                    else:  # slave
-                        PORT = self.participants[node_id][1]
-
+            for node_id in self.participants:
+                IP = self.participants[node_id][-1]
+                if self.master:
+                    PORT = self.participants[node_id][2]
+                else:  # slave
+                    PORT = self.participants[node_id][1]
+                try:
                     print('UDP publisher msg: {}'.format(MESSAGE.decode('ascii')))
                     self.sock.sendto(MESSAGE, (IP, PORT))
-            finally:
-                self.sock.close()
+                except Exception as e:
+                    print("error in publisher")
+                finally:
+                    self.sock.close()
 
     '''
 	message_formulation function reads data from the shared squarcle_data and send it 
@@ -115,27 +116,31 @@ class udp_pubsub:
                 for node_id in self.participants:
                     self.sock = socket.socket(socket.AF_INET,  # Internet
                                               socket.SOCK_DGRAM)  # UDP
+                    try:
+                        # IP   = self.participants[node_id][-1] # IP of neighbor
+                        IP = self.node_ip
+                        if self.master:
+                            PORT = self.participants[node_id][
+                                1]  # Neighbor's publishing port (we listener to the publishing port of the neighbor)
+                        else:
+                            PORT = self.participants[node_id][2]
+                        #print('UDP subscriber msg:{}'.format())
+                        # print('IP: {}, PORT: {}'.format(IP, PORT))
+                        self.sock.bind((IP, PORT))
 
-                    # IP   = self.participants[node_id][-1] # IP of neighbor
-                    IP = self.node_ip
-                    if self.master:
-                        PORT = self.participants[node_id][
-                            1]  # Neighbor's publishing port (we listener to the publishing port of the neighbor)
-                    else:
-                        PORT = self.participants[node_id][2]
-                    #print('UDP subscriber msg:{}'.format())
-                    # print('IP: {}, PORT: {}'.format(IP, PORT))
-                    self.sock.bind((IP, PORT))
+                        data, addr = self.sock.recvfrom(1024)  # buffer size is 1024 bytes
 
-                    data, addr = self.sock.recvfrom(1024)  # buffer size is 1024 bytes
+                        print("received UDP message: {}".format(data.decode('ascii')))
+                        # Update the other_nodes_msgs
+                        self.data_extraction_from_udp_msg(data.decode('ascii'))
+                        # Update shared store
+                        self.update_squarcle_data()
 
-                    print("received UDP message: {}".format(data.decode('ascii')))
-                    # Update the other_nodes_msgs
-                    self.data_extraction_from_udp_msg(data.decode('ascii'))
-                    # Update shared store
-                    self.update_squarcle_data()
+                        self.sock.close()
+                    except Exception as e:
+                        print("error here ")
 
-                    self.sock.close()
+
             except Exception as e:
                 print('Problem with UDP')
                 print(e.with_traceback())
@@ -152,7 +157,7 @@ class udp_pubsub:
         received_info = []
         centers_gatherer = []
         score_gatherer = []
-
+        self.received_centers = []
         # splitting the message on '.'
         received_info = message.split('.')
 
