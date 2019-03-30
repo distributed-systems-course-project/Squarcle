@@ -27,7 +27,24 @@ class Game_Over(object):
         #number of nodes variable
         self.s_data.acquire()
         self.var_1.set(self.s_data.node_index)
+        scores = self.s_data.all_scores
+        current_node_score = self.s_data.score
+        current_node_name = self.s_data.name
         self.s_data.release()
+
+
+
+        ## Score list
+        scoreGUIList = Listbox(root_3)
+        scoreGUIList.place(x=100, y=200)
+
+        scoreGUIList.insert(1, str(current_node_name) + " => " + str(current_node_score))
+        for i in range(0, len(scores)):
+            scoreGUIList.insert(i+2, str(scores[i][0]) + " => " + str(scores[i][1]))
+
+
+        scoreGUIList.pack()
+        scoreGUIList.place(bordermode=OUTSIDE, x=200, y=400)
         root_3.mainloop()
 
 

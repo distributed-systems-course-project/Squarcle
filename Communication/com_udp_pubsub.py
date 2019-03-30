@@ -157,6 +157,7 @@ class udp_pubsub:
         centers_gatherer = []
         score_gatherer = []
         self.received_centers = []
+        self.received_scores = []
         # splitting the message on '.'
         received_info = message.split('.')
 
