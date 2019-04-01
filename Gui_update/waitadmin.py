@@ -50,8 +50,10 @@ class Wait_admin(object):
 
         self.ref = Button(root_2, text="Refresh", height=5, width=25, command=refresh_number)
         self.ref.pack()
-
-        self.node_label=Label(root_2,text="Joined Nodes:",relief="solid",font="Times 14 bold ")
+        self.s_data.acquire()
+        name = self.s_data.node_ID
+        self.s_data.release()
+        self.node_label=Label(root_2,text="Your ID is: " + str(name),relief="solid",font="Times 14 bold ")
         self.node_label.pack()
         self.node_label.place(bordermode=OUTSIDE, height=50, width=150,x=100,y=300)
         
