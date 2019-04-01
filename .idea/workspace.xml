@@ -4,14 +4,9 @@
     <bookmark url="file://$PROJECT_DIR$/Communication/com_udp_pubsub.py" line="125" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="18edb28d-63d0-4ab0-8a2c-7233e1adb3e8" name="Default Changelist" comment="UDP append problem solved">
-      <change beforePath="$PROJECT_DIR$/.idea/Squarcle.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/R_User_Library.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+    <list default="true" id="18edb28d-63d0-4ab0-8a2c-7233e1adb3e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gui_update/GUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/Gui_update/GUI.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Gui_update/Gameover.py" beforeDir="false" afterPath="$PROJECT_DIR$/Gui_update/Gameover.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/squarcle_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/squarcle_data.py" afterDir="false" />
     </list>
@@ -25,33 +20,33 @@
     <session id="367997222">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="21" />
+          <entry key="project.closed" value="22" />
           <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.10" value="1" />
           <entry key="project.open.time.13" value="1" />
           <entry key="project.open.time.14" value="2" />
           <entry key="project.open.time.15" value="3" />
           <entry key="project.open.time.16" value="3" />
-          <entry key="project.open.time.18" value="2" />
+          <entry key="project.open.time.18" value="3" />
           <entry key="project.open.time.2" value="1" />
           <entry key="project.open.time.20" value="1" />
           <entry key="project.open.time.25" value="1" />
           <entry key="project.open.time.6" value="3" />
           <entry key="project.open.time.7" value="1" />
           <entry key="project.open.time.9" value="3" />
-          <entry key="project.opened" value="23" />
+          <entry key="project.opened" value="24" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="65" />
+          <entry key="py" value="68" />
           <entry key="pyi" value="2" />
           <entry key="xml" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="65" />
+          <entry key="Python" value="68" />
           <entry key="PythonStub" value="2" />
           <entry key="XML" value="1" />
         </counts>
@@ -59,14 +54,14 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="6" />
-          <entry key="py" value="19266" />
-          <entry key="txt" value="946" />
+          <entry key="py" value="19697" />
+          <entry key="txt" value="965" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="952" />
-          <entry key="Python" value="19266" />
+          <entry key="PLAIN_TEXT" value="971" />
+          <entry key="Python" value="19697" />
         </counts>
       </usages-collector>
     </session>
@@ -76,8 +71,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Gui_update/GUI.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="73" column="20" selection-start-line="73" selection-start-column="16" selection-end-line="73" selection-end-column="20" />
+            <state relative-caret-position="298">
+              <caret line="85" column="37" selection-start-line="85" selection-start-column="37" selection-end-line="85" selection-end-column="37" />
               <folding>
                 <element signature="e#0#16#0" expanded="true" />
               </folding>
@@ -88,10 +83,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Gui_update/Gameover.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="15" column="96" selection-start-line="15" selection-start-column="96" selection-end-line="15" selection-end-column="96" />
+            <state relative-caret-position="340">
+              <caret line="55" column="30" selection-start-line="55" selection-start-column="30" selection-end-line="55" selection-end-column="30" />
               <folding>
-                <element signature="e#0#20#0" expanded="true" />
+                <element signature="e#0#16#0" expanded="true" />
+                <marker date="1554145682730" expanded="true" signature="196:201" ph="..." />
               </folding>
             </state>
           </provider>
@@ -100,28 +96,33 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/squarcle_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="146" column="33" selection-start-line="146" selection-start-column="33" selection-end-line="146" selection-end-column="33" />
+            <state relative-caret-position="131">
+              <caret line="74" selection-start-line="74" selection-end-line="74" />
               <folding>
                 <element signature="e#1829#1840#0" expanded="true" />
-                <marker date="1553981202260" expanded="true" signature="6623:6630" ph="..." />
-                <marker date="1553981202260" expanded="true" signature="6655:6664" ph="..." />
-                <marker date="1553981202260" expanded="true" signature="8236:9180" ph="..." />
-                <marker date="1553981202260" expanded="true" signature="8911:9180" ph="..." />
-                <marker date="1553981202260" expanded="true" signature="9234:9257" ph="..." />
+                <marker date="1554144226772" expanded="true" signature="6623:6630" ph="..." />
+                <marker date="1554144226772" expanded="true" signature="6655:6664" ph="..." />
+                <marker date="1554144226772" expanded="true" signature="8273:9217" ph="..." />
+                <marker date="1554144226772" expanded="true" signature="8948:9217" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Gui_update/initial_window.py">
+        <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/tkinter/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2397">
-              <caret line="141" column="18" selection-start-line="141" selection-start-column="18" selection-end-line="141" selection-end-column="18" />
-              <folding>
-                <element signature="e#191#233#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="125">
+              <caret line="1701" selection-start-line="1701" selection-end-line="1701" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Gui_update/waitadmin.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="34">
+              <caret line="2" column="5" selection-start-line="2" selection-start-column="5" selection-end-line="2" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -129,7 +130,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Communication/com_udp_pubsub.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="233">
+            <state relative-caret-position="1666">
               <caret line="99" column="57" selection-start-line="99" selection-start-column="57" selection-end-line="99" selection-end-column="57" />
             </state>
           </provider>
@@ -156,7 +157,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Communication/com_tcp_initiator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="568">
+            <state relative-caret-position="4114">
               <caret line="242" column="65" selection-start-line="242" selection-start-column="65" selection-end-line="242" selection-end-column="65" />
             </state>
           </provider>
@@ -165,8 +166,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Gui_update/waitmember.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="22" selection-start-line="22" selection-end-line="22" />
+            <state relative-caret-position="527">
+              <caret line="37" selection-start-line="19" selection-start-column="6" selection-end-line="37" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
               </folding>
@@ -209,9 +210,11 @@
       <find>gam</find>
       <find>recei</find>
       <find>received_centers</find>
-      <find>message_form</find>
       <find>centers</find>
+      <find>message_form</find>
       <find>score</find>
+      <find>Game_Over(</find>
+      <find>hah</find>
     </findStrings>
     <replaceStrings>
       <replace>squarcle_data</replace>
@@ -248,8 +251,8 @@
         <option value="$PROJECT_DIR$/Gui_update/waitmember.py" />
         <option value="$PROJECT_DIR$/Communication/com_udp_pubsub.py" />
         <option value="$PROJECT_DIR$/Gui_update/initial_window.py" />
-        <option value="$PROJECT_DIR$/Gui_update/GUI.py" />
         <option value="$PROJECT_DIR$/squarcle_data.py" />
+        <option value="$PROJECT_DIR$/Gui_update/GUI.py" />
         <option value="$PROJECT_DIR$/Gui_update/Gameover.py" />
       </list>
     </option>
@@ -693,7 +696,14 @@
       <option name="project" value="LOCAL" />
       <updated>1553980896881</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="Fixed ranking issue">
+      <created>1553981334954</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1553981334954</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TodoView">
@@ -709,7 +719,7 @@
     <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49384615" visible="true" weight="0.20045386" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49384615" visible="true" weight="0.20347957" />
       <window_info id="Structure" order="1" sideWeight="0.5061538" side_tool="true" weight="0.19742814" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -719,7 +729,7 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32923076" />
-      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.49924356" weight="0.22461538" />
+      <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" sideWeight="0.49924356" weight="0.22461538" />
       <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49848714" weight="0.24615385" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5015129" side_tool="true" weight="0.24615385" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32923076" />
@@ -755,7 +765,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="edited main" />
     <MESSAGE value="added random corners generator" />
     <MESSAGE value="edited GUI and merged" />
     <MESSAGE value="minor changes" />
@@ -780,10 +789,18 @@
     <MESSAGE value="Fixed game synchronization, now both players would start at same time 3" />
     <MESSAGE value="Removed previous GUIs, edited the sources" />
     <MESSAGE value="UDP append problem solved" />
-    <option name="LAST_COMMIT_MESSAGE" value="UDP append problem solved" />
+    <MESSAGE value="Fixed ranking issue" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed ranking issue" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Gui_update/Gameover.py</url>
+          <line>73</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
@@ -814,13 +831,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/tkinter/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="21692">
-          <caret line="1279" selection-start-line="1279" selection-end-line="1279" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/synch_data.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
@@ -842,20 +852,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/misc.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="10" lean-forward="true" selection-start-line="3" selection-start-column="10" selection-end-line="3" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/initial_window.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="79" column="8" selection-start-line="79" selection-start-column="8" selection-end-line="79" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/misc.xml" />
+    <entry file="file://$PROJECT_DIR$/initial_window.py" />
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/typeshed/stdlib/2and3/threading.pyi">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -894,31 +892,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/GUI.py">
+    <entry file="file://$PROJECT_DIR$/GUI.py" />
+    <entry file="file://$PROJECT_DIR$/wait.py" />
+    <entry file="file://$PROJECT_DIR$/Gameover.py" />
+    <entry file="file://$PROJECT_DIR$/Gui_update/initial_window.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2142">
-          <caret line="130" column="24" selection-start-line="130" selection-start-column="24" selection-end-line="134" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wait.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1207">
-          <caret line="76" column="11" selection-start-line="76" selection-start-column="11" selection-end-line="76" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ComOrchestrator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1819">
-          <caret line="111" column="33" selection-start-line="111" selection-start-column="33" selection-end-line="111" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Gameover.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="10" column="34" lean-forward="true" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
+        <state relative-caret-position="2312">
+          <caret line="141" column="18" selection-start-line="141" selection-start-column="18" selection-end-line="141" selection-end-column="18" />
+          <folding>
+            <element signature="e#191#233#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -929,20 +912,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Communication/com_tcp_initiator.py">
+    <entry file="file://$PROJECT_DIR$/Communication/com_udp_pubsub.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="568">
-          <caret line="242" column="65" selection-start-line="242" selection-start-column="65" selection-end-line="242" selection-end-column="65" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Gui_update/waitmember.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" selection-start-line="22" selection-end-line="22" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="1666">
+          <caret line="99" column="57" selection-start-line="99" selection-start-column="57" selection-end-line="99" selection-end-column="57" />
         </state>
       </provider>
     </entry>
@@ -953,54 +926,68 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Communication/com_udp_pubsub.py">
+    <entry file="file://$PROJECT_DIR$/ComOrchestrator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="233">
-          <caret line="99" column="57" selection-start-line="99" selection-start-column="57" selection-end-line="99" selection-end-column="57" />
+        <state relative-caret-position="1819">
+          <caret line="111" column="33" selection-start-line="111" selection-start-column="33" selection-end-line="111" selection-end-column="33" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Gui_update/GUI.py">
+    <entry file="file://$PROJECT_DIR$/Communication/com_tcp_initiator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="73" column="20" selection-start-line="73" selection-start-column="16" selection-end-line="73" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#16#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="4114">
+          <caret line="242" column="65" selection-start-line="242" selection-start-column="65" selection-end-line="242" selection-end-column="65" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Gui_update/initial_window.py">
+    <entry file="file://$PROJECT_DIR$/Gui_update/waitmember.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2397">
-          <caret line="141" column="18" selection-start-line="141" selection-start-column="18" selection-end-line="141" selection-end-column="18" />
+        <state relative-caret-position="527">
+          <caret line="37" selection-start-line="19" selection-start-column="6" selection-end-line="37" />
           <folding>
-            <element signature="e#191#233#0" expanded="true" />
+            <element signature="e#0#20#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/squarcle_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="146" column="33" selection-start-line="146" selection-start-column="33" selection-end-line="146" selection-end-column="33" />
+        <state relative-caret-position="131">
+          <caret line="74" selection-start-line="74" selection-end-line="74" />
           <folding>
             <element signature="e#1829#1840#0" expanded="true" />
-            <marker date="1553981202260" expanded="true" signature="6623:6630" ph="..." />
-            <marker date="1553981202260" expanded="true" signature="6655:6664" ph="..." />
-            <marker date="1553981202260" expanded="true" signature="8236:9180" ph="..." />
-            <marker date="1553981202260" expanded="true" signature="8911:9180" ph="..." />
-            <marker date="1553981202260" expanded="true" signature="9234:9257" ph="..." />
+            <marker date="1554144226772" expanded="true" signature="6623:6630" ph="..." />
+            <marker date="1554144226772" expanded="true" signature="6655:6664" ph="..." />
+            <marker date="1554144226772" expanded="true" signature="8273:9217" ph="..." />
+            <marker date="1554144226772" expanded="true" signature="8948:9217" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/tkinter/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="1701" selection-start-line="1701" selection-end-line="1701" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Gui_update/GUI.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="85" column="37" selection-start-line="85" selection-start-column="37" selection-end-line="85" selection-end-column="37" />
+          <folding>
+            <element signature="e#0#16#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Gui_update/Gameover.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="15" column="96" selection-start-line="15" selection-start-column="96" selection-end-line="15" selection-end-column="96" />
+        <state relative-caret-position="340">
+          <caret line="55" column="30" selection-start-line="55" selection-start-column="30" selection-end-line="55" selection-end-column="30" />
           <folding>
-            <element signature="e#0#20#0" expanded="true" />
+            <element signature="e#0#16#0" expanded="true" />
+            <marker date="1554145682730" expanded="true" signature="196:201" ph="..." />
           </folding>
         </state>
       </provider>

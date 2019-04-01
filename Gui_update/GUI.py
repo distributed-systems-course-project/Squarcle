@@ -81,8 +81,9 @@ class Main_Game(object):
             if self.s_data.end:
                 self.s_data.release()
                 root.destroy()
-                gameover = Game_Over(self.s_data)
-            self.s_data.release()
+                gameover = Game_Over(self.s_data, 0)
+            else:
+                self.s_data.release()
 
         def up(zero):
 
@@ -101,8 +102,9 @@ class Main_Game(object):
             if self.s_data.end:
                 self.s_data.release()
                 root.destroy()
-                gameover = Game_Over(self.s_data)
-            self.s_data.release()
+                gameover = Game_Over(self.s_data, 0)
+            else:
+                self.s_data.release()
 
         def right(zero):
 
@@ -120,8 +122,9 @@ class Main_Game(object):
             if self.s_data.end:
                 self.s_data.release()
                 root.destroy()
-                gameover = Game_Over(self.s_data)
-            self.s_data.release()
+                gameover = Game_Over(self.s_data,0)
+            else:
+                self.s_data.release()
 
         def left(zero):
             global x
@@ -141,9 +144,9 @@ class Main_Game(object):
             if self.s_data.end:
                 self.s_data.release()
                 root.destroy()
-                gameover = Game_Over(self.s_data)
-            self.s_data.release()
-
+                gameover = Game_Over(self.s_data, 0)
+            else:
+                self.s_data.release()
         root.bind("s", down)
         root.bind("z", up)
         root.bind("d", right)

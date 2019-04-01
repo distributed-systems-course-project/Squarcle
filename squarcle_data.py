@@ -178,6 +178,7 @@ class squarcle_data:
                 self.color_counter = self.color_counter + 1
                 if self.color_counter == (self.number_of_nodes):
                     self.set_end(True)
+                    self.set_score()
                     return 0
                 self.set_score()
                 self.next_color_corner_pair = [self.corners_and_colours_pairs[0][self.color_counter], self.corners_and_colours_pairs[1][self.color_counter]]
