@@ -10,9 +10,10 @@ class Game_Over(object):
     s_data = 0
     def __init__(self, s_data, old_root):
         blabla = True
+        root_3 = Tk()
         while True:
             self.s_data = s_data
-            root_3 = Tk()
+            destroy = False
             root_2 = 0
 
             root_3.geometry('600x600')
@@ -51,17 +52,28 @@ class Game_Over(object):
             scoreGUIList.place(bordermode=OUTSIDE, x=200, y=400)
             if blabla:
                 wait_thread = threading.Thread(name='wait_game_start', target=self.set_thread,
-                                               args=(s_data, scores, root_3))
+                                               args=(s_data, scores, destroy))
                 wait_thread.start()
                 blabla = False
+            destroyer = threading.Thread(name='destroyer thread', target=self.destroyer,
+                                           args=(destroy, root_3))
+            destroyer.start()
+
             root_3.mainloop()
             print("hahahahahahahahahhahahahahhahahahahhaha")
 
 
 
 
-
-    def set_thread(self, s_data, scores,root_1):
+    def destroyer(self, destroy, root1):
+        while True:
+            if destroy:
+                print("yaw rani bdit ndestroyi")
+                root1.destroy()
+                time.sleep(0.3)
+                destroy = False
+                break
+    def set_thread(self, s_data, scores,destroy):
         h = False
         m = 0
         while True:
@@ -73,7 +85,8 @@ class Game_Over(object):
             if h:
                 print("tbadal score")
                 self.s_data.release()
-                root_1.destroy()
+                destroy = True
+                h = False
             else:
                 self.s_data.release()
                 time.sleep(1)
