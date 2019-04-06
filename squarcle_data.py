@@ -80,7 +80,7 @@ class squarcle_data:
     def set_play_from_com(self):
         self.play_from_com = True
     def set_parameters(self, number_of_nodes, node_ID):
-        self.number_of_nodes = number_of_nodes + 2
+        self.number_of_nodes = number_of_nodes + 4
         self.node_ID = node_ID
         self.all_scores = [["Boutefssssssssss", 0]] * number_of_nodes
         self.randomize_corners()

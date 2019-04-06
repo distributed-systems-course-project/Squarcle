@@ -60,7 +60,7 @@ class Ui_Form(object):
         self.textEdit_2.setFont(font)
         self.textEdit_2.setObjectName("textEdit_2")
         self.label_3 = QtWidgets.QLabel(Form)
-        self.label_3.setGeometry(QtCore.QRect(80, 20, 251, 41))
+        self.label_3.setGeometry(QtCore.QRect(80, 20, 300, 41))
         font = QtGui.QFont()
         font.setPointSize(17)
         font.setBold(True)
