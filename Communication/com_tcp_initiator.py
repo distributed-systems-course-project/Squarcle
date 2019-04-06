@@ -80,7 +80,7 @@ class Tcp_Initiator:
                 conn.send(to_send.encode('utf-8'))  # echo
         except Exception as e:
             self.isTimeOut = True
-            self.data.logger(False, e.with_traceback())
+            self.data.logger(False, e.with_traceback)
 
         finally:
             self.sock.close()
