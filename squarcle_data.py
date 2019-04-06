@@ -147,7 +147,7 @@ class squarcle_data:
         self.find_nearest_score()
 
     def set_score(self):
-        self.score = self.color_counter * (100 + random.randint(10, 20))
+        self.score = self.color_counter * (100 + random.randint(10, 200))
     def set_node_center(self, node_center):
         self.node_center = node_center
         self.check_distance_with_nodes()

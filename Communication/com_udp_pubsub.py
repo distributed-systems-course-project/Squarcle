@@ -45,8 +45,8 @@ class udp_pubsub:
         while True:
             time.sleep(1 / 10)
             MESSAGE = self.message_formulation()  # Formulating the write msg to send
-
-            MESSAGE = MESSAGE.encode('utf-8')  # encoding the message before sending it
+            ENC_MESSAGE = self.encrypt(MESSAGE)
+            ENC_MESSAGE = ENC_MESSAGE.encode('utf-8')  # encoding the message before sending it
 
             # print('Message from UDP: {}'.format(MESSAGE))
 
@@ -60,8 +60,9 @@ class udp_pubsub:
                 else:  # slave
                     PORT = self.participants[node_id][1]
                 try:
-                    print('UDP publisher msg: {}'.format(MESSAGE.decode('ascii')))
-                    self.sock.sendto(MESSAGE, (IP, PORT))
+                    print('UDP publisher msg: {}'.format(MESSAGE))
+                    print('UDP publisher encrypted msg: {}'.format(ENC_MESSAGE))
+                    self.sock.sendto(ENC_MESSAGE, (IP, PORT))
                 except Exception as e:
                     print("error in publisher")
                 finally:
@@ -129,9 +130,13 @@ class udp_pubsub:
 
                         data, addr = self.sock.recvfrom(1024)  # buffer size is 1024 bytes
 
-                        print("received UDP message: {}".format(data.decode('ascii')))
+                        print("received UDP encrypted message: {}".format(data.decode('ascii')))
+
+                        # Decryption
+                        data = self.decrypt(data.decode('ascii'))
+                        print("received UDP message: {}".format(data))
                         # Update the other_nodes_msgs
-                        self.data_extraction_from_udp_msg(data.decode('ascii'))
+                        self.data_extraction_from_udp_msg(data)
                         # Update shared store
                         self.update_squarcle_data()
 
@@ -201,6 +206,46 @@ class udp_pubsub:
         self.data.set_all_scores(self.received_scores)
         self.data.all_scores_ready = True
         self.data.release()
+
+    '''
+    encrypt function
+    Arguments:
+        content: (string) udp packet content to encrypt
+        key: (string) key to use for encryption
+    Return:
+        cypher: (string) encrypted udp packet content
+    The encryption consists of XORing each character of the content with
+    the corresponding character of the key 
+    '''
+    def encrypt(self, content):
+        cypher = ''
+        key = len(content)*'A'
+
+        for [x, y] in zip(content, key):
+
+            cypher+=chr(ord(x) ^ ord(y))
+
+        return cypher
+
+    '''
+    decrypt function
+    Arguments:
+        cypher: (string) cypher content to decrypt
+        key: (string) key to use for decryption
+    Return:
+        plain_text: (string) decrepted udp encrypted packet content
+    The decryption consists of XORing each character of the cypher string with
+    the corresponding character of the key 
+    '''
+    def decrypt(self, cypher):
+        plain_text = ''
+        key = len(cypher) * 'A'
+
+        for [x, y] in zip(cypher, key):
+
+            plain_text+=chr(ord(x) ^ ord(y))
+
+        return plain_text
 
     '''
 	Getters
