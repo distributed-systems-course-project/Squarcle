@@ -78,8 +78,10 @@ class Tcp_Initiator:
                 to_send = self.tcp_echo_msg(node_name, data[1]) # to send should contain [<node_id>, <node_name>, <udp_listening_port>, <udp_publiishing_port> ]
 
                 conn.send(to_send.encode('utf-8'))  # echo
-        except:
+        except Exception as e:
             self.isTimeOut = True
+            self.data.logger(False, e.with_traceback())
+
         finally:
             self.sock.close()
 

@@ -65,6 +65,7 @@ class udp_pubsub:
                     self.sock.sendto(ENC_MESSAGE, (IP, PORT))
                 except Exception as e:
                     print("error in publisher")
+                    self.data.logger(False, e.with_traceback())
                 finally:
                     self.sock.close()
 
@@ -148,6 +149,7 @@ class udp_pubsub:
             except Exception as e:
                 print('Problem with UDP')
                 print(e.with_traceback())
+                self.data.logger(False, e.with_traceback())
             finally:
                 self.sock.close()
 
