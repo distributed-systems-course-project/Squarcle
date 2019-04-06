@@ -21,7 +21,7 @@
 import time
 import random
 import threading
-
+import logging
 class squarcle_data:
     #################################these are constants that would be used###################################################
     ##GUI designer needs to adjust these parameters based on the view and size of display used
@@ -71,16 +71,27 @@ class squarcle_data:
     def set_com_thread(self, th):
         self.com_thread = th
 
+    def logger(self, flag, msg):
+        LOG_FORMAT = "%(levelname)s %(asctime)s -%(message)s"
+        logging.basicConfig(filename="Squarcle.log", level=logging.DEBUG, format=LOG_FORMAT)
+        logger = logging.getLogger()
+        if flag:
+            logger.info(msg)
+        else:
+            logger.error(msg)
+
     def release(self):
         self.lock.release()
         self.set_timer()
+        msg = str(self.node_ID) + "\t" + str(self.name)  + "\t" + str(self.score) + "\t" + str(self.node_center)
+        self.logger(True, msg)
 
     def acquire(self):
         self.lock.acquire()
     def set_play_from_com(self):
         self.play_from_com = True
     def set_parameters(self, number_of_nodes, node_ID):
-        self.number_of_nodes = number_of_nodes + 4
+        self.number_of_nodes = number_of_nodes + 2
         self.node_ID = node_ID
         self.all_scores = [["Boutefssssssssss", 0]] * number_of_nodes
         self.randomize_corners()
