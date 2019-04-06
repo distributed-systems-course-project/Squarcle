@@ -15,9 +15,9 @@ class Game_Over(object):
             root_3 = Tk()
             root_2 = 0
 
-            root_3.geometry('600x600')
+            root_3.geometry('600x800')
 
-            self.over_label=Label(root_3,text="Mission accomplished !",relief="solid",font="Times 22 bold " ,width=15,height=4,anchor=CENTER)
+            self.over_label=Label(root_3,text="Mission accomplished !",relief="solid",font="Times 22 bold " ,width=200,height=4,anchor=CENTER)
             self.over_label.pack()
             self.ranking_label=Label(root_2,text="Your Ranking is:",relief="solid",font="Times 14 bold ")
             self.ranking_label.pack()
@@ -74,6 +74,7 @@ class Game_Over(object):
                 print("tbadal score")
                 self.s_data.release()
                 root_1.destroy()
+                h = False
             else:
                 self.s_data.release()
                 time.sleep(1)
