@@ -73,7 +73,7 @@ class squarcle_data:
 
     def logger(self, flag, msg):
         LOG_FORMAT = "%(levelname)s %(asctime)s -%(message)s"
-        logging.basicConfig(filename="Squarcle.log", level=logging.DEBUG, format=LOG_FORMAT)
+        logging.basicConfig(filename="Squarcle.log", level=logging.DEBUG, format=LOG_FORMAT, filemode='w')
         logger = logging.getLogger()
         if flag:
             logger.info(msg)
