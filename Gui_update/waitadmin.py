@@ -40,7 +40,7 @@ class Wait_admin(object):
 
         root_2 =Tk()
 
-        root_2.geometry('600x600')
+        root_2.geometry('800x600')
 
         self.Wait_label=Label(root_2,text="Wait Please",relief="solid",font="Times 20 bold " ,width=15,height=4,anchor=N)
         self.Wait_label.pack()

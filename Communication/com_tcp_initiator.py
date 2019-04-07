@@ -1,5 +1,7 @@
 # Communication TCP listener class
 import socket 		# To manage sockets
+import traceback
+
 
 class Tcp_Initiator:
 
@@ -80,7 +82,8 @@ class Tcp_Initiator:
                 conn.send(to_send.encode('utf-8'))  # echo
         except Exception as e:
             self.isTimeOut = True
-            self.data.logger(False, e.with_traceback)
+            traceback.print_exception(type(e), e, e.__traceback__)
+            self.data.logger(False, e)
 
         finally:
             self.sock.close()

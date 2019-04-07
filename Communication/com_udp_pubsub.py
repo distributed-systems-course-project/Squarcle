@@ -1,7 +1,7 @@
 # Communication publisher class
 import socket
 import time
-
+import traceback
 
 class udp_pubsub:
     participants = {}
@@ -48,24 +48,28 @@ class udp_pubsub:
             ENC_MESSAGE = self.encrypt(MESSAGE)
             ENC_MESSAGE = ENC_MESSAGE.encode('utf-8')  # encoding the message before sending it
 
-            # print('Message from UDP: {}'.format(MESSAGE))
 
-            self.sock = socket.socket(socket.AF_INET,  # Internet
-                                      socket.SOCK_DGRAM)  # UDP
-            # print('participants: {}'.format(len(self.participants)))
+            print('length of participants: {}'.format(len(self.participants)))
+            print(self.participants)
+
             for node_id in self.participants:
+                self.sock = socket.socket(socket.AF_INET,  # Internet
+                                          socket.SOCK_DGRAM)  # UDP
+
                 IP = self.participants[node_id][-1]
                 if self.master:
                     PORT = self.participants[node_id][2]
                 else:  # slave
                     PORT = self.participants[node_id][1]
+
+                print('UDP publisher msg: {}'.format(MESSAGE))
+                print('UDP publisher encrypted msg: {}'.format(ENC_MESSAGE))
                 try:
-                    print('UDP publisher msg: {}'.format(MESSAGE))
-                    print('UDP publisher encrypted msg: {}'.format(ENC_MESSAGE))
-                    self.sock.sendto(ENC_MESSAGE, (IP, PORT))
+                    self.sock.sendto(ENC_MESSAGE, (IP, int(PORT)))
                 except Exception as e:
                     print("error in publisher")
-                    self.data.logger(False, e.with_traceback)
+                    traceback.print_exception(type(e), e, e.__traceback__)
+                    self.data.logger(False, e)
                 finally:
                     self.sock.close()
 
@@ -144,13 +148,14 @@ class udp_pubsub:
                         self.sock.close()
                     except Exception as e:
                         print("error here ")
-                        self.data.logger(False, e.with_traceback)
+                        traceback.print_exception(type(e), e, e.__traceback__)
+                        self.data.logger(False, e)
 
 
             except Exception as e:
                 print('Problem with UDP')
-                print(e.with_traceback)
-                self.data.logger(False, e.with_traceback)
+                traceback.print_exception(type(e), e, e.__traceback__)
+                self.data.logger(False, e)
             finally:
                 self.sock.close()
 
