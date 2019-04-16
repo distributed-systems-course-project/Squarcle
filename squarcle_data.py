@@ -35,7 +35,7 @@ class squarcle_data:
     nodes_to_admin = [] # Needed in Admin GUI (list of connected nodes !)
     creator_ID = 0
     participants = {}
-    nodes_centers = [["name", [0,0]]] #this should have information about node ID and center, ['A', (32,4)]
+    qq = [["name", [0,0]]] #this should have information about node ID and center, ['A', (32,4)]
     all_scores = [["name", 0]] #this has the scores of all nodes
     all_scores_ready = False
     playability = False
@@ -93,7 +93,8 @@ class squarcle_data:
     def set_parameters(self, number_of_nodes, node_ID):
         self.number_of_nodes = number_of_nodes + 5
         self.node_ID = node_ID
-        self.all_scores = [["Boutefssssssssss", 0]] * number_of_nodes
+        if self.all_scores[0][0] == "name":
+            self.all_scores = [["name", 0]] * number_of_nodes
         self.randomize_corners()
         self.generate_colors()
         self.corners_and_colours_pairs = [self.corners, self.colours]

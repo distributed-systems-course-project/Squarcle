@@ -91,6 +91,10 @@ class udp_pubsub:
         current_node_name = self.data.name
         self.data.release()
 
+        print('Message formulation: Node centers: {}'.format(nodes_centers))
+        print('Message formulation: Node scores: {}'.format(all_score))
+
+
         message = ''
 
         if self.master:
@@ -105,6 +109,8 @@ class udp_pubsub:
                    str(current_node_location[0]) + '.' +  # cx
                    str(current_node_location[1]) + '.' +  # cy.
                    str(current_node_score) + '.')
+
+        print('Message before sending: {}'.format(message))
 
         return message[:-1]  # removing last '.'
 
@@ -125,8 +131,7 @@ class udp_pubsub:
                         # IP   = self.participants[node_id][-1] # IP of neighbor
                         IP = self.node_ip
                         if self.master:
-                            PORT = self.participants[node_id][
-                                1]  # Neighbor's publishing port (we listener to the publishing port of the neighbor)
+                            PORT = self.participants[node_id][1]  # Neighbor's publishing port (we listener to the publishing port of the neighbor)
                         else:
                             PORT = self.participants[node_id][2]
                         #print('UDP subscriber msg:{}'.format())
@@ -166,7 +171,12 @@ class udp_pubsub:
 	'''
 
     def data_extraction_from_udp_msg(self, message):
-        received_info = []
+        # Old information extraction
+        self.data.acquire()
+        old_scores = self.data.all_scores
+        old_nodes_centers = self.data.nodes_centers
+        self.data.release()
+
         centers_gatherer = []
         score_gatherer = []
         self.received_centers = []
@@ -174,15 +184,42 @@ class udp_pubsub:
         # splitting the message on '.'
         received_info = message.split('.')
 
+        # Create correct all scores
+        if old_scores[0][0] == 'name':
+            old_scores = []
+            for key, participant_data in self.participants.items():
+                old_scores.append([str(key), 0])
+            self.data.acquire()
+            self.all_scores = old_scores
+            print('Updated local scores: {}'.format(old_scores))
+            print('Updated squarcle scores: {}'.format(self.all_scores))
+            self.data.release()
+
+        if old_nodes_centers[0][0] == 'name':
+            old_nodes_centers = []
+            for key, participant_data in self.participants.items():
+                old_nodes_centers.append([str(key), [0, 0]])
+            self.data.acquire()
+            self.nodes_centers = old_nodes_centers
+            print('Updated local nodes centers²: {}'.format(old_nodes_centers))
+            print('Updated squarcle nodes centers: {}'.format(self.data.nodes_centers))
+            self.data.release()
+
         if self.master:
             # master receives a msg of the form : node_name.cx.cy.score from slave
 
+
             # Casting the message elements from strings to integers
-            self.received_centers.append([str(received_info[0]),
-                                          [int(received_info[1]), int(received_info[2])]])  # [node_name, [cx, cy]]
+            for particpant in old_nodes_centers:
+                if particpant[0] == str(received_info[0]):
+                    particpant[1] = [int(received_info[1]), int(received_info[2])]# [node_name, [cx, cy]]
+                self.received_centers = old_nodes_centers
 
-            self.received_scores.append([str(received_info[0]), int(received_info[3])])  # [node_name, score]
-
+            for particpant in old_scores:
+                if particpant[0] == str(received_info[0]):
+                    particpant[1] = int(received_info[3])
+                #self.received_scores.append([str(received_info[0]), int(received_info[3])])  # [node_name, score]
+                self.received_scores = old_scores
         else:
             # slave receives msg from master of the form : node_name1.cx1.cy1.score1.node_name2.cx2.cy2.score2...
             for i in range(0, len(received_info), 4):
